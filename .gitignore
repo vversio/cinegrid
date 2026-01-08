@@ -34,3 +34,9 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE and editor files
+.cursor/
+
+# OpenSpec local files
+AGENTS.md

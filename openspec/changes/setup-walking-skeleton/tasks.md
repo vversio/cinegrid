@@ -1,15 +1,15 @@
 ## 1. Project Initialization
-- [ ] 1.1 Install Node.js and npm dependencies (if not already installed)
-- [ ] 1.2 Run `npx create-next-app@latest cinegrid --typescript --tailwind --eslint`
-- [ ] 1.3 Initialize Git repository with `git init`
-- [ ] 1.4 Create initial commit with project scaffold
+- [x] 1.1 Install Node.js and npm dependencies (if not already installed)
+- [x] 1.2 Run `npx create-next-app@latest cinegrid --typescript --tailwind --eslint`
+- [x] 1.3 Initialize Git repository with `git init`
+- [x] 1.4 Create initial commit with project scaffold
 
 ## 2. CI Pipeline Setup
-- [ ] 2.1 Create `.github/workflows/` directory
-- [ ] 2.2 Create `ci.yml` workflow file with triggers for `main` branch and pull requests
-- [ ] 2.3 Configure linting job (ESLint)
-- [ ] 2.4 Configure type checking job (TypeScript)
-- [ ] 2.5 Configure build test job (Next.js build)
+- [x] 2.1 Create `.github/workflows/` directory
+- [x] 2.2 Create `ci.yml` workflow file with triggers for `main` branch and pull requests
+- [x] 2.3 Configure linting job (ESLint)
+- [x] 2.4 Configure type checking job (TypeScript)
+- [x] 2.5 Configure build test job (Next.js build)
 - [ ] 2.6 Test CI pipeline by pushing to repository
 
 ## 3. CD Pipeline Setup
@@ -20,5 +20,5 @@
 - [ ] 3.5 Test deployment by pushing to `main` branch
 
 ## 4. Documentation
-- [ ] 4.1 Verify `openspec/project.md` is populated with project context
-- [ ] 4.2 Ensure README.md exists (created by Next.js) or create one with basic project info
+- [x] 4.1 Verify `openspec/project.md` is populated with project context
+- [x] 4.2 Ensure README.md exists (created by Next.js) or create one with basic project info
