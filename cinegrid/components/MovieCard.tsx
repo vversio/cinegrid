@@ -15,7 +15,7 @@ interface MovieCardProps {
   onToggleFavorite?: (id: string) => void;
   onRatingChange?: (id: string, rating: number) => void;
   onViewDetails?: (movie: WatchedMovie) => void;
-  variant?: 'grid' | 'hero';
+  variant?: 'grid' | 'hero' | 'compact';
   priority?: boolean; // For LCP optimization - set true for above-the-fold images
 }
 
@@ -71,11 +71,14 @@ export default function MovieCard({
   };
 
   const isHero = variant === 'hero';
+  const isCompact = variant === 'compact';
   const cardClasses = cn(
     'group relative rounded-lg overflow-hidden',
     isHero 
-      ? 'w-[240px] h-[360px] flex-shrink-0 glass filmic-glow border border-filmic-seduction/10' 
-      : 'aspect-[2/3] bg-filmic-charcoal-light'
+      ? 'w-[180px] h-[270px] flex-shrink-0 glass border border-filmic-seduction/10' 
+      : isCompact
+        ? 'w-[140px] h-[210px] flex-shrink-0 bg-filmic-charcoal-light'
+        : 'aspect-[2/3] bg-filmic-charcoal-light'
   );
 
   // Handle keyboard navigation
@@ -95,13 +98,10 @@ export default function MovieCard({
       onBlur={() => setIsHovered(false)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      whileHover={{
-        y: -8,
-        scale: 1.02,
-      }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      whileHover={isCompact ? { y: -4, scale: 1.02 } : { y: -6, scale: 1.02 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
       style={{
-        boxShadow: isHovered ? '0 20px 40px rgba(82, 42, 111, 0.3)' : 'none',
+        boxShadow: isHovered ? '0 10px 25px rgba(82, 42, 111, 0.25)' : 'none',
       }}
       tabIndex={onViewDetails ? 0 : undefined}
       role={onViewDetails ? 'button' : undefined}
@@ -114,32 +114,35 @@ export default function MovieCard({
           alt={movie.title}
           fill
           className="object-cover"
-          sizes={isHero ? '240px' : '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw'}
+          sizes={isHero ? '180px' : isCompact ? '140px' : '(max-width: 640px) 33vw, (max-width: 1024px) 20vw, 14vw'}
           priority={priority}
           loading={priority ? 'eager' : 'lazy'}
         />
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-filmic-seduction to-filmic-charcoal text-filmic-rose p-4">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-filmic-seduction to-filmic-charcoal text-filmic-rose p-2">
           {movie.media_type === 'series' ? (
-            <Tv size={32} className="mb-2 opacity-50" />
+            <Tv size={isCompact ? 20 : 28} className="mb-1 opacity-50" />
           ) : (
-            <Film size={32} className="mb-2 opacity-50" />
+            <Film size={isCompact ? 20 : 28} className="mb-1 opacity-50" />
           )}
-          <span className="text-sm text-center line-clamp-3">{movie.title}</span>
+          <span className={cn("text-center line-clamp-2", isCompact ? "text-xs" : "text-sm")}>{movie.title}</span>
         </div>
       )}
 
       {/* Media type badge */}
       {movie.media_type === 'series' && (
-        <div className="absolute top-2 left-2 px-2 py-1 text-xs font-medium glass rounded text-filmic-beige">
+        <div className={cn(
+          "absolute top-1.5 left-1.5 px-1.5 py-0.5 font-medium glass rounded text-filmic-beige",
+          isCompact ? "text-[10px]" : "text-xs"
+        )}>
           Series
         </div>
       )}
 
       {/* Favorite indicator (always visible if favorited) */}
       {movie.is_favorite && !isHovered && (
-        <div className="absolute top-2 right-2">
-          <Heart size={18} className="fill-red-500 text-red-500" />
+        <div className="absolute top-1.5 right-1.5">
+          <Heart size={isCompact ? 12 : 16} className="fill-red-500 text-red-500" />
         </div>
       )}
 
@@ -151,41 +154,41 @@ export default function MovieCard({
         transition={{ duration: 0.2 }}
       >
         {/* Content at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 p-3">
+        <div className={cn("absolute bottom-0 left-0 right-0", isCompact ? "p-2" : "p-3")}>
           {/* Custom category badge */}
-          {movie.custom_category && (
-            <span className="inline-block px-2 py-1 mb-2 text-xs font-medium glass-subtle rounded-full text-filmic-beige">
+          {movie.custom_category && !isCompact && (
+            <span className="inline-block px-2 py-0.5 mb-1 text-[10px] font-medium glass-subtle rounded-full text-filmic-beige">
               {movie.custom_category}
             </span>
           )}
           
           {/* Title */}
-          <p className="text-white text-sm font-medium truncate">{movie.title}</p>
+          <p className={cn("text-white font-medium truncate", isCompact ? "text-xs" : "text-sm")}>{movie.title}</p>
           
           {/* Genre & Date */}
-          <p className="text-white/70 text-xs">{movie.genre}</p>
-          <p className="text-white/50 text-xs">{movie.watched_date}</p>
+          <p className={cn("text-white/70", isCompact ? "text-[10px]" : "text-xs")}>{movie.genre}</p>
+          {!isCompact && <p className="text-white/50 text-xs">{movie.watched_date}</p>}
 
           {/* Rating */}
-          <div className="mt-2">
+          <div className={isCompact ? "mt-1" : "mt-2"}>
             <StarRating
               rating={movie.user_rating}
               onRatingChange={isAdmin ? handleRatingChange : undefined}
               readOnly={!isAdmin}
-              size="sm"
+              size={isCompact ? "xs" : "sm"}
             />
           </div>
         </div>
 
         {/* Action buttons (top right) - only for admin */}
         {isAdmin && (
-          <div className="absolute top-2 right-2 flex gap-1">
+          <div className="absolute top-1.5 right-1.5 flex gap-0.5">
             {/* Favorite toggle */}
             <button
               onClick={handleToggleFavorite}
               disabled={isFavoriting}
               className={cn(
-                'p-2 rounded-full glass transition-colors disabled:opacity-50',
+                'p-1.5 rounded-full glass transition-colors disabled:opacity-50',
                 movie.is_favorite 
                   ? 'text-red-500 hover:bg-red-500/20' 
                   : 'text-white/80 hover:text-red-400'
@@ -193,7 +196,7 @@ export default function MovieCard({
               aria-label={movie.is_favorite ? 'Remove from favorites' : 'Add to favorites'}
             >
               <Heart 
-                size={16} 
+                size={isCompact ? 12 : 14} 
                 className={movie.is_favorite ? 'fill-current' : ''} 
               />
             </button>
@@ -203,10 +206,10 @@ export default function MovieCard({
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="p-2 rounded-full glass text-white/80 hover:text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                className="p-1.5 rounded-full glass text-white/80 hover:text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50"
                 aria-label="Delete"
               >
-                <Trash2 size={16} />
+                <Trash2 size={isCompact ? 12 : 14} />
               </button>
             )}
           </div>

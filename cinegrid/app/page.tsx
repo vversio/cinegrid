@@ -11,7 +11,6 @@ import type { User } from '@supabase/supabase-js';
 
 import BackgroundEffect from '@/components/ui/BackgroundEffect';
 import Header from '@/components/ui/Header';
-import AnalyticsPanel from '@/components/ui/AnalyticsPanel';
 import MobileAnalyticsDrawer, { AnalyticsFAB } from '@/components/ui/MobileAnalyticsDrawer';
 import FilterControls from '@/components/ui/FilterControls';
 import GenreTrendChart from '@/components/GenreTrendChart';
@@ -121,7 +120,7 @@ function HomeContent() {
     return getUniqueGenres(movies);
   }, [movies]);
 
-  // Filter controls component - vertical layout for sidebar
+  // Filter controls component - horizontal layout for navbar
   const filterControls = (
     <FilterControls
       filterState={filterState}
@@ -133,7 +132,7 @@ function HomeContent() {
       onSearchChange={(search) => updateFilters({ search })}
       onClearFilters={clearFilters}
       hasActiveFilters={hasActiveFilters}
-      layout="vertical"
+      layout="horizontal"
     />
   );
 
@@ -147,7 +146,7 @@ function HomeContent() {
 
   // Main content (favorites + grid)
   const mainContent = (
-    <div className="p-4 lg:p-6">
+    <div className="p-3 lg:p-4">
       {/* Favorites Carousel - now with filters applied */}
       <FavoritesCarousel
         favorites={filteredFavorites}
@@ -162,8 +161,8 @@ function HomeContent() {
       {/* Movie Grid */}
       <div>
         {/* Grid header with count */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="h2">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-semibold text-filmic-beige">
             {hasActiveFilters ? 'Filtered Results' : 'Recently Added'}
             <span className="text-xs text-filmic-rose ml-2 font-normal">
               {filteredMovies.length} {filteredMovies.length === 1 ? 'item' : 'items'}
@@ -173,17 +172,17 @@ function HomeContent() {
 
         {/* Grid */}
         {moviesError ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-red-400">Failed to load movies. Please refresh the page.</p>
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="text-red-400 text-sm">Failed to load movies. Please refresh the page.</p>
           </div>
         ) : filteredMovies.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3">
             {filteredMovies.map((movie, index) => (
               <motion.div
                 key={movie.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, delay: index * 0.03 }}
+                transition={{ duration: 0.15, delay: index * 0.02 }}
               >
                 <MovieCard
                   movie={movie}
@@ -192,23 +191,24 @@ function HomeContent() {
                   onToggleFavorite={isAdminUser ? handleToggleFavorite : undefined}
                   onRatingChange={isAdminUser ? handleRatingChange : undefined}
                   onViewDetails={setSelectedMovie}
-                  priority={index < 6}
+                  priority={index < 8}
+                  variant="compact"
                 />
               </motion.div>
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-16 h-16 rounded-full bg-filmic-seduction/20 flex items-center justify-center mb-4">
-              <span className="text-2xl opacity-50">[ ]</span>
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-12 h-12 rounded-full bg-filmic-seduction/20 flex items-center justify-center mb-3">
+              <span className="text-lg opacity-50">[ ]</span>
             </div>
-            <p className="text-filmic-rose">
+            <p className="text-filmic-rose text-sm">
               {hasActiveFilters ? 'No movies match your filters' : 'No movies or series yet'}
             </p>
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="mt-4 px-4 py-2 text-sm text-filmic-lavender hover:text-filmic-beige transition-colors"
+                className="mt-3 px-3 py-1.5 text-xs text-filmic-lavender hover:text-filmic-beige transition-colors"
               >
                 Clear filters
               </button>
@@ -234,36 +234,27 @@ function HomeContent() {
         }}
       />
 
-      {/* Header */}
+      {/* Header with filter controls */}
       <Header
         user={user}
         onAuthChange={handleAuthChange}
         onOpenAnalytics={() => setMobileAnalyticsOpen(true)}
         showAnalyticsButton={true}
+        filterControls={filterControls}
       />
 
       {/* Main layout */}
-      <main className="h-[calc(100vh-56px)] relative z-10">
+      <main className="h-[calc(100vh-48px)] relative z-10 overflow-y-auto">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-12 h-12 rounded-full border-2 border-filmic-lavender border-t-transparent animate-spin" />
-              <p className="text-filmic-rose">Loading your collection...</p>
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-10 h-10 rounded-full border-2 border-filmic-lavender border-t-transparent animate-spin" />
+              <p className="text-filmic-rose text-sm">Loading your collection...</p>
             </div>
           </div>
         ) : (
           <>
-            {/* Desktop: Side-by-side layout with analytics panel */}
-            <div className="hidden lg:block h-full">
-              <AnalyticsPanel mainContent={mainContent} filterControls={filterControls}>
-                {analyticsContent}
-              </AnalyticsPanel>
-            </div>
-
-            {/* Mobile/Tablet: Just main content, analytics in drawer */}
-            <div className="lg:hidden h-full overflow-y-auto">
-              {mainContent}
-            </div>
+            {mainContent}
 
             {/* Mobile Analytics Drawer */}
             <MobileAnalyticsDrawer

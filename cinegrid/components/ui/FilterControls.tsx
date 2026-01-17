@@ -38,7 +38,7 @@ export default function FilterControls({
   layout = 'horizontal',
 }: FilterControlsProps) {
   const containerClass = cn(
-    layout === 'horizontal' ? 'flex items-center gap-3' : 'flex flex-col gap-2',
+    layout === 'horizontal' ? 'flex items-center gap-2' : 'flex flex-col gap-2',
     className
   );
 
@@ -86,8 +86,8 @@ export default function FilterControls({
       <SearchBar
         value={filterState.search}
         onChange={onSearchChange}
-        placeholder="Search collection..."
-        className={layout === 'vertical' ? 'w-full' : 'w-[180px]'}
+        placeholder="Search..."
+        className={layout === 'vertical' ? 'w-full' : 'w-[120px]'}
       />
 
       {/* Sort */}
@@ -95,8 +95,8 @@ export default function FilterControls({
         value={filterState.sort}
         onValueChange={(v) => onSortChange(v as SortOption)}
         options={sortOptions}
-        placeholder="Sort by"
-        className={layout === 'vertical' ? 'w-full' : 'w-[140px]'}
+        placeholder="Sort"
+        className={layout === 'vertical' ? 'w-full' : 'w-[90px]'}
       />
 
       {/* Media Type Filter */}
@@ -105,7 +105,7 @@ export default function FilterControls({
         onValueChange={(v) => onMediaTypeChange(v as MediaFilter)}
         options={mediaTypeOptions}
         placeholder="Type"
-        className={layout === 'vertical' ? 'w-full' : 'w-[120px]'}
+        className={layout === 'vertical' ? 'w-full' : 'w-[75px]'}
       />
 
       {/* Genre Filter */}
@@ -115,7 +115,7 @@ export default function FilterControls({
           onValueChange={(v) => onGenreChange(v === ALL_GENRES ? [] : [v])}
           options={genreOptions}
           placeholder="Genre"
-          className={layout === 'vertical' ? 'w-full' : 'w-[130px]'}
+          className={layout === 'vertical' ? 'w-full' : 'w-[90px]'}
         />
       )}
 
@@ -125,7 +125,7 @@ export default function FilterControls({
         onValueChange={(v) => onMinRatingChange(v === ANY_RATING ? null : parseInt(v, 10))}
         options={ratingOptions}
         placeholder="Rating"
-        className={layout === 'vertical' ? 'w-full' : 'w-[100px]'}
+        className={layout === 'vertical' ? 'w-full' : 'w-[70px]'}
       />
 
       {/* Clear Filters Button */}
@@ -133,11 +133,11 @@ export default function FilterControls({
         <button
           onClick={onClearFilters}
           className={cn(
-            "flex items-center gap-1 px-3 py-2 text-sm text-filmic-rose hover:text-filmic-beige transition-colors",
+            "flex items-center gap-1 px-2 py-1 text-xs text-filmic-rose hover:text-filmic-beige transition-colors",
             layout === 'vertical' && 'w-full justify-center'
           )}
         >
-          <X size={14} />
+          <X size={12} />
           Clear
         </button>
       )}

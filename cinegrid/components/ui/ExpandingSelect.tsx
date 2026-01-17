@@ -57,17 +57,17 @@ export default function ExpandingSelect({
         type="button"
         onClick={() => setOpen(!open)}
         className={cn(
-          'glass border-glass-border filter-control-button text-filmic-beige text-sm',
-          'flex w-full items-center justify-between gap-2 rounded-md px-3 py-2',
+          'glass border-glass-border filter-control-button text-filmic-beige text-xs',
+          'flex w-full items-center justify-between gap-1.5 rounded-md px-2 py-1.5',
           'hover:bg-filmic-seduction/30 transition-colors',
-          'focus:outline-none focus:ring-2 focus:ring-filmic-lavender',
+          'focus:outline-none focus:ring-1 focus:ring-filmic-lavender',
           open && 'bg-filmic-seduction/30'
         )}
       >
         <span className="truncate">{selectedOption?.label || placeholder}</span>
         <ChevronDownIcon 
           className={cn(
-            'size-4 opacity-50 transition-transform shrink-0',
+            'size-3 opacity-50 transition-transform shrink-0',
             open && 'rotate-180'
           )} 
         />
@@ -84,7 +84,7 @@ export default function ExpandingSelect({
             className="overflow-hidden"
           >
             <div className="glass border-glass-border filter-control-dropdown rounded-md">
-              <div className="py-1">
+              <div className="py-0.5">
                 {options.map((option) => (
                   <button
                     key={option.value}
@@ -94,7 +94,7 @@ export default function ExpandingSelect({
                       setOpen(false);
                     }}
                     className={cn(
-                      'relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 px-2 text-sm outline-none',
+                      'relative flex w-full cursor-pointer select-none items-center rounded-sm py-1 px-2 text-xs outline-none',
                       'text-filmic-beige hover:bg-filmic-seduction/30 transition-colors',
                       'focus:bg-filmic-seduction/30',
                       value === option.value && 'bg-filmic-seduction/20'
@@ -102,7 +102,7 @@ export default function ExpandingSelect({
                   >
                     <span className="flex-1 text-left">{option.label}</span>
                     {value === option.value && (
-                      <CheckIcon className="size-4 shrink-0" />
+                      <CheckIcon className="size-3 shrink-0" />
                     )}
                   </button>
                 ))}

@@ -11,6 +11,7 @@ interface HeaderProps {
   onAuthChange: () => void;
   onOpenAnalytics?: () => void;
   showAnalyticsButton?: boolean;
+  filterControls?: React.ReactNode;
 }
 
 export default function Header({ 
@@ -18,21 +19,27 @@ export default function Header({
   onAuthChange, 
   onOpenAnalytics,
   showAnalyticsButton = false,
+  filterControls,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 h-14 glass large-panel border-b border-glass-border">
-      <div className="max-w-[1920px] mx-auto px-4 lg:px-6 h-full flex items-center justify-between">
+    <header className="sticky top-0 z-40 h-12 glass border-b border-glass-border">
+      <div className="max-w-[1920px] mx-auto px-3 lg:px-4 h-full flex items-center justify-between gap-3">
         {/* Logo with Starlord font */}
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-display tracking-wide text-filmic-lavender text-neon-glow">
+        <div className="flex items-center flex-shrink-0">
+          <h1 className="text-lg font-display tracking-wide text-filmic-lavender text-neon-glow">
             CineGrid
           </h1>
         </div>
 
+        {/* Desktop: Filter controls in center */}
+        <div className="hidden md:flex flex-1 justify-center">
+          {filterControls}
+        </div>
+
         {/* Desktop: Auth button */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center flex-shrink-0">
           <AuthButton user={user} onAuthChange={onAuthChange} />
         </div>
 
@@ -42,10 +49,10 @@ export default function Header({
           {showAnalyticsButton && onOpenAnalytics && (
             <button
               onClick={onOpenAnalytics}
-              className="p-2 rounded-lg glass neon-glow-blue hover:bg-filmic-seduction-light/20 transition-colors"
+              className="p-1.5 rounded-lg glass hover:bg-filmic-seduction-light/20 transition-colors"
               aria-label="Open analytics"
             >
-              <BarChart3 size={18} className="text-filmic-lavender" />
+              <BarChart3 size={16} className="text-filmic-lavender" />
             </button>
           )}
 
@@ -53,23 +60,30 @@ export default function Header({
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <button
-                className="p-2 rounded-lg glass hover:neon-glow-blue hover:bg-filmic-seduction-light/20 transition-all"
+                className="p-1.5 rounded-lg glass hover:bg-filmic-seduction-light/20 transition-all"
                 aria-label="Open menu"
               >
                 {mobileMenuOpen ? (
-                  <X size={18} className="text-filmic-lavender" />
+                  <X size={16} className="text-filmic-lavender" />
                 ) : (
-                  <Menu size={18} className="text-filmic-lavender" />
+                  <Menu size={16} className="text-filmic-lavender" />
                 )}
               </button>
             </SheetTrigger>
             <SheetContent 
               side="right" 
-              className="w-[300px] bg-filmic-charcoal-light border-l border-glass-border"
+              className="w-[280px] bg-filmic-charcoal-light border-l border-glass-border"
             >
-              <div className="flex flex-col gap-6 pt-8">
+              <div className="flex flex-col gap-4 pt-6">
+                {/* Filter controls on mobile */}
+                {filterControls && (
+                  <div className="pb-4 border-b border-glass-border">
+                    <p className="text-xs text-filmic-rose uppercase tracking-wide mb-3">Filters</p>
+                    {filterControls}
+                  </div>
+                )}
                 {/* Auth button */}
-                <div className="pt-4 border-t border-glass-border">
+                <div>
                   <AuthButton user={user} onAuthChange={onAuthChange} />
                 </div>
               </div>

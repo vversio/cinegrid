@@ -9,14 +9,15 @@ interface StarRatingProps {
   rating: number | null;
   onRatingChange?: (rating: number) => void;
   readOnly?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   className?: string;
 }
 
 const sizeMap = {
-  sm: 14,
-  md: 18,
-  lg: 22,
+  xs: 10,
+  sm: 12,
+  md: 16,
+  lg: 20,
 };
 
 export default function StarRating({
