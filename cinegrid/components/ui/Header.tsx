@@ -24,9 +24,9 @@ export default function Header({
   return (
     <header className="sticky top-0 z-40 h-14 glass large-panel border-b border-glass-border">
       <div className="max-w-[1920px] mx-auto px-4 lg:px-6 h-full flex items-center justify-between">
-        {/* Logo with neon glow */}
+        {/* Logo with Starlord font */}
         <div className="flex items-center gap-4">
-          <h1 className="text-lg font-bold tracking-tight text-filmic-lavender text-neon-glow">
+          <h1 className="text-xl font-display tracking-wide text-filmic-lavender text-neon-glow">
             CineGrid
           </h1>
         </div>
