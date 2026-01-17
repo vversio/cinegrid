@@ -1,3 +1,5 @@
+# Root .gitignore (monorepo-level)
+
 # Dependencies
 node_modules/
 .pnp
@@ -6,27 +8,28 @@ node_modules/
 # Testing
 coverage/
 
-# Next.js
+# Next.js / build artifacts
 .next/
 out/
 build/
 dist/
 
-# Production
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files (never commit real secrets)
+.env
+.env.*
+!.env.example
+!.env.*.example
 
 # Misc
 .DS_Store
 *.pem
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Local env files
-.env*.local
-.env
 
 # Vercel
 .vercel
@@ -37,6 +40,7 @@ next-env.d.ts
 
 # IDE and editor files
 .cursor/
+.vscode/
+.idea/
 
-# OpenSpec local files
-AGENTS.md
+# OpenSpec local cache (keep specs, ignore local tooling noise if any)

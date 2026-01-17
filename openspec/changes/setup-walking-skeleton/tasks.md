@@ -10,14 +10,14 @@
 - [x] 2.3 Configure linting job (ESLint)
 - [x] 2.4 Configure type checking job (TypeScript)
 - [x] 2.5 Configure build test job (Next.js build)
-- [ ] 2.6 Test CI pipeline by pushing to repository
+- [x] 2.6 Test CI pipeline by pushing to repository
 
 ## 3. CD Pipeline Setup
-- [ ] 3.1 Link GitHub repository to Vercel account
-- [ ] 3.2 Verify Vercel auto-detects Next.js configuration
-- [ ] 3.3 Confirm preview deployments are created for branches
-- [ ] 3.4 Confirm production deployment is created for `main` branch
-- [ ] 3.5 Test deployment by pushing to `main` branch
+- [x] 3.1 Link GitHub repository to Vercel account
+- [x] 3.2 Verify Vercel auto-detects Next.js configuration
+- [x] 3.3 Confirm preview deployments are created for branches
+- [x] 3.4 Confirm production deployment is created for `main` branch
+- [x] 3.5 Test deployment by pushing to `main` branch
 
 ## 4. Documentation
 - [x] 4.1 Verify `openspec/project.md` is populated with project context

@@ -1,26 +1,382 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark *));
+
+/* Filmic Grain Theme - Cool blue neon tones */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Filmic Grain color palette - blue neon vibrant */
+  --filmic-charcoal: #0a0c12;           /* Deep blue-black - Primary background */
+  --filmic-charcoal-light: #141822;     /* Elevated surfaces - dark blue-gray */
+  --filmic-seduction: #1e3a5f;          /* Deep blue - Secondary accents */
+  --filmic-seduction-light: #2563eb;    /* Vibrant blue hover */
+  --filmic-lavender: #e879f9;           /* Fuchsia pink - Links, CTAs */
+  --filmic-yellow: #fbbf24;             /* Amber gold - Highlights */
+  --filmic-beige: #f0e6ff;              /* Light purple-pink - Primary text */
+  --filmic-beige-muted: #d8b4fe;        /* Purple-pink muted - Secondary text */
+  --filmic-rose: #c026d3;               /* Magenta - Accents */
+  --filmic-rose-muted: rgba(192, 38, 211, 0.85); /* Muted magenta */
+  --filmic-violet-dark: #0f172a;        /* Deep navy */
+  
+  /* Neon colors */
+  --neon-blue: #3b82f6;
+  --neon-cyan: #22d3ee;
+  --neon-purple: #a855f7;
+  --neon-pink: #e879f9;
+  --neon-magenta: #d946ef;
+  
+  /* Glass effects - blue-tinted with neon glow */
+  --glass-bg: rgba(10, 12, 18, 0.85);
+  --glass-border: rgba(59, 130, 246, 0.3);
+  --glass-border-glow: rgba(96, 165, 250, 0.25);
+  --glass-solid: #141822;
+  
+  /* shadcn/ui overrides for Filmic theme */
+  --radius: 0.625rem;
+  --background: var(--filmic-charcoal);
+  --foreground: var(--filmic-beige);
+  --card: var(--filmic-charcoal-light);
+  --card-foreground: var(--filmic-beige);
+  --popover: var(--filmic-charcoal-light);
+  --popover-foreground: var(--filmic-beige);
+  --primary: var(--filmic-lavender);
+  --primary-foreground: var(--filmic-charcoal);
+  --secondary: var(--filmic-seduction);
+  --secondary-foreground: var(--filmic-beige);
+  --muted: var(--filmic-charcoal-light);
+  --muted-foreground: var(--filmic-rose);
+  --accent: var(--filmic-seduction);
+  --accent-foreground: var(--filmic-beige);
+  --destructive: #ef4444;
+  --border: var(--glass-border);
+  --input: rgba(82, 42, 111, 0.2);
+  --ring: var(--filmic-lavender);
+  
+  /* Chart colors - Blue neon palette */
+  --chart-1: #60a5fa;  /* Bright blue */
+  --chart-2: #22d3ee;  /* Cyan */
+  --chart-3: #fbbf24;  /* Amber gold */
+  --chart-4: #8b5cf6;  /* Purple */
+  --chart-5: #3b82f6;  /* Blue */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
   --font-mono: var(--font-geist-mono);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Filmic custom colors */
+  --color-filmic-charcoal: var(--filmic-charcoal);
+  --color-filmic-charcoal-light: var(--filmic-charcoal-light);
+  --color-filmic-seduction: var(--filmic-seduction);
+  --color-filmic-seduction-light: var(--filmic-seduction-light);
+  --color-filmic-lavender: var(--filmic-lavender);
+  --color-filmic-yellow: var(--filmic-yellow);
+  --color-filmic-beige: var(--filmic-beige);
+  --color-filmic-beige-muted: var(--filmic-beige-muted);
+  --color-filmic-rose: var(--filmic-rose);
+  
+  /* Glass solid for dropdowns */
+  --color-glass-solid: var(--glass-solid);
+  --color-glass-border: var(--glass-border);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply text-foreground antialiased;
+    background-color: transparent;
+  }
+  html {
+    background-color: var(--filmic-charcoal);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Filmic utility classes */
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 0 2px var(--glass-border-glow), 0 0 4px var(--glass-border-glow);
+  }
+  
+  .glass.large-panel {
+    box-shadow: 0 0 3px var(--glass-border-glow), 0 0 6px var(--glass-border-glow);
+  }
+  
+  .glass-solid {
+    background: var(--glass-solid);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 0 2px var(--glass-border-glow), 0 0 4px var(--glass-border-glow);
+  }
+  
+  .glass-subtle {
+    background: rgba(42, 40, 43, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .border-glass-border {
+    border-color: var(--glass-border);
+  }
+  
+  /* Filter/sort buttons - clean borders, glow on hover */
+  .filter-control-button {
+    border: 1px solid var(--glass-border);
+    box-shadow: none !important;
+    isolation: isolate;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .filter-control-button:hover,
+  .filter-control-button[data-state="open"] {
+    box-shadow: 0 0 1px var(--glass-border-glow), 0 0 3px var(--glass-border-glow) !important;
+  }
+  
+  .filter-control-button,
+  .filter-control-button *,
+  .filter-control-button::before,
+  .filter-control-button::after {
+    box-shadow: none !important;
+  }
+  
+  .filter-control-button:hover,
+  .filter-control-button:hover *,
+  .filter-control-button[data-state="open"],
+  .filter-control-button[data-state="open"] * {
+    box-shadow: 0 0 1px var(--glass-border-glow), 0 0 3px var(--glass-border-glow) !important;
+  }
+  
+  .border-soft {
+    border-color: rgba(82, 42, 111, 0.1);
+  }
+  
+  /* Neon glow effects - vibrant blue */
+  .filmic-glow {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
+  }
+  
+  .filmic-glow-intense {
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.6), 0 0 40px rgba(96, 165, 250, 0.3), 0 0 60px rgba(96, 165, 250, 0.15);
+  }
+  
+  .neon-glow-blue {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.7), 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2);
+  }
+  
+  .neon-glow-cyan {
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.7), 0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(34, 211, 238, 0.2);
+  }
+  
+  .neon-glow-purple {
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.7), 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.2);
+  }
+  
+  .filmic-glow-yellow {
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.6), 0 0 20px rgba(251, 191, 36, 0.3);
+  }
+  
+  .filmic-lift {
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+  }
+  
+  /* Filmic text colors */
+  .text-filmic-heading {
+    color: var(--filmic-beige);
+  }
+  
+  .text-filmic-body {
+    color: var(--filmic-beige-muted);
+  }
+  
+  .text-filmic-muted {
+    color: var(--filmic-rose);
+  }
+  
+  .text-filmic-accent {
+    color: var(--filmic-lavender);
+  }
+  
+  .text-filmic-highlight {
+    color: var(--filmic-yellow);
+  }
+  
+  /* Blurry spread effect for borders */
+  [class*="border-glass-border"]:not(.filter-control-button):not(.filter-control-button *):not(.filter-control-dropdown),
+  [class*="border-filmic-seduction"]:not(.filter-control-button):not(.filter-control-button *):not(.filter-control-dropdown) {
+    box-shadow: 0 0 2px var(--glass-border-glow), 0 0 4px var(--glass-border-glow);
+  }
+  
+  .filter-control-dropdown {
+    box-shadow: 0 0 1px var(--glass-border-glow), 0 0 2px var(--glass-border-glow) !important;
+  }
+}
+
+/* Typography scale - Filmic Grain colors */
+.h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--filmic-beige);
+}
+
+.h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--filmic-beige);
+}
+
+.body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--filmic-beige-muted);
+}
+
+.caption {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--filmic-rose);
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--filmic-rose);
+}
+
+/* Shimmer effect - Filmic colors */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--filmic-charcoal-light) 0%,
+    var(--filmic-seduction) 50%,
+    var(--filmic-charcoal-light) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Focus ring for accessibility - Filmic lavender */
+.focus-filmic {
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  --tw-ring-color: var(--filmic-lavender);
+  --tw-ring-offset-color: var(--filmic-charcoal);
+}
+
+/* Scrollbar styling - Filmic accent */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--filmic-charcoal-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--filmic-seduction);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--filmic-lavender);
+}
+
+/* Text glow effect - Neon purple-pink */
+.text-filmic-glow {
+  text-shadow: 0 0 10px rgba(232, 121, 249, 0.8), 0 0 20px rgba(232, 121, 249, 0.4), 0 0 40px rgba(232, 121, 249, 0.2);
+}
+
+.text-neon-glow {
+  text-shadow: 0 0 8px rgba(232, 121, 249, 0.9), 0 0 15px rgba(217, 70, 239, 0.6), 0 0 30px rgba(192, 38, 211, 0.4);
+}
+
+.text-neon-pink {
+  text-shadow: 0 0 8px rgba(232, 121, 249, 1), 0 0 15px rgba(232, 121, 249, 0.7), 0 0 30px rgba(232, 121, 249, 0.4);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Film grain texture effect (optional) */
+.film-grain {
+  filter: grayscale(5%) contrast(102%);
+}
+
+.film-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/film-grain.png');
+  background-repeat: repeat;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Background with GIF support */
+.bg-guardians {
+  background-image: url('/guardians.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Subtle pulse animation for accents */
+@keyframes filmic-pulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-filmic-pulse {
+  animation: filmic-pulse 3s ease-in-out infinite;
 }
