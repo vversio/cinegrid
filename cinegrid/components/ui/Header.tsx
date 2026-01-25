@@ -41,13 +41,13 @@ export default function Header({
         }}
       >
         <div className="h-14 px-5 flex items-center justify-between gap-4">
-          {/* Logo with Starlord font */}
+          {/* Logo */}
           <motion.div 
             className="flex items-center flex-shrink-0"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <h1 className="text-xl font-display tracking-wide text-text-primary">
+            <h1 className="text-xl font-bold tracking-wide text-text-primary">
               CineGrid
             </h1>
           </motion.div>
