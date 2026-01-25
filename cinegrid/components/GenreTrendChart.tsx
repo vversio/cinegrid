@@ -87,12 +87,12 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
   if (movies.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-[300px] text-center">
-        <div className="w-16 h-16 rounded-full bg-filmic-seduction/20 flex items-center justify-center mb-4">
-          <svg className="w-8 h-8 text-filmic-lavender" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="w-16 h-16 rounded-full bg-bg-tertiary/50 flex items-center justify-center mb-4">
+          <svg className="w-8 h-8 text-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
         </div>
-        <p className="text-filmic-rose text-sm">Start tracking movies to see trends</p>
+        <p className="text-text-secondary text-sm">Start tracking movies to see trends</p>
       </div>
     );
   }
@@ -102,9 +102,9 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-medium text-filmic-beige">Genre Trends</h3>
+          <h3 className="text-sm font-medium text-text-primary">Genre Trends</h3>
         </div>
-        <div className="h-[200px] bg-filmic-seduction/10 rounded-lg animate-pulse" />
+        <div className="h-[200px] bg-bg-tertiary/30 rounded-lg animate-pulse" />
       </div>
     );
   }
@@ -113,12 +113,12 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
     <div className="space-y-3">
       {/* Header with time range toggle */}
       <div className="flex justify-between items-center">
-        <h3 className="text-sm font-medium text-filmic-beige">Genre Trends</h3>
-        <div className="flex gap-1 p-1 rounded-full bg-filmic-seduction/20">
+        <h3 className="text-sm font-medium text-text-primary">Genre Trends</h3>
+        <div className="flex gap-1 p-1 rounded-full bg-bg-tertiary/50">
           <Toggle
             pressed={timeRange === 'all'}
             onPressedChange={() => handleTimeRangeChange('all')}
-            className="px-3 py-1 text-xs rounded-full data-[state=on]:bg-filmic-lavender data-[state=on]:text-white"
+            className="px-3 py-1 text-xs rounded-full data-[state=on]:bg-text-primary data-[state=on]:text-bg-primary"
             size="sm"
           >
             All Time
@@ -126,7 +126,7 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
           <Toggle
             pressed={timeRange === 'year'}
             onPressedChange={() => handleTimeRangeChange('year')}
-            className="px-3 py-1 text-xs rounded-full data-[state=on]:bg-filmic-lavender data-[state=on]:text-white"
+            className="px-3 py-1 text-xs rounded-full data-[state=on]:bg-text-primary data-[state=on]:text-bg-primary"
             size="sm"
           >
             This Year
@@ -147,29 +147,28 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
                   </linearGradient>
                 ))}
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(59, 130, 246, 0.15)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1)" />
               <XAxis
                 dataKey="monthLabel"
-                tick={{ fill: '#d8b4fe', fontSize: 10 }}
-                axisLine={{ stroke: 'rgba(176, 168, 192, 0.2)' }}
+                tick={{ fill: '#a0a0a0', fontSize: 10 }}
+                axisLine={{ stroke: 'rgba(255, 255, 255, 0.1)' }}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fill: '#d8b4fe', fontSize: 10 }}
-                axisLine={{ stroke: 'rgba(176, 168, 192, 0.2)' }}
+                tick={{ fill: '#a0a0a0', fontSize: 10 }}
+                axisLine={{ stroke: 'rgba(255, 255, 255, 0.1)' }}
                 tickLine={false}
                 allowDecimals={false}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'rgba(10, 12, 18, 0.95)',
-                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  backgroundColor: '#1a1a1a',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '8px',
                   backdropFilter: 'blur(8px)',
-                  boxShadow: '0 0 20px rgba(59, 130, 246, 0.2)',
                 }}
-                labelStyle={{ color: '#f0e6ff', fontWeight: 600, marginBottom: '4px' }}
-                itemStyle={{ color: '#d8b4fe', fontSize: '12px' }}
+                labelStyle={{ color: '#ffffff', fontWeight: 600, marginBottom: '4px' }}
+                itemStyle={{ color: '#a0a0a0', fontSize: '12px' }}
               />
               {topGenres.map((genre, index) => (
                 <Area
@@ -185,7 +184,7 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
             </AreaChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-full flex items-center justify-center text-filmic-rose text-sm">
+          <div className="h-full flex items-center justify-center text-text-secondary text-sm">
             No data for selected time range
           </div>
         )}
@@ -193,19 +192,19 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
 
       {/* Quick stats */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="p-2 rounded-lg bg-filmic-seduction/15 text-center">
-          <div className="text-base font-semibold text-filmic-beige">{stats.totalMovies}</div>
-          <div className="text-xs text-filmic-rose">Movies</div>
+        <div className="p-2 rounded-lg bg-bg-tertiary/30 text-center">
+          <div className="text-base font-semibold text-text-primary">{stats.totalMovies}</div>
+          <div className="text-xs text-text-secondary">Movies</div>
         </div>
-        <div className="p-2 rounded-lg bg-filmic-seduction/15 text-center">
-          <div className="text-base font-semibold text-filmic-beige">{stats.totalSeries}</div>
-          <div className="text-xs text-filmic-rose">Series</div>
+        <div className="p-2 rounded-lg bg-bg-tertiary/30 text-center">
+          <div className="text-base font-semibold text-text-primary">{stats.totalSeries}</div>
+          <div className="text-xs text-text-secondary">Series</div>
         </div>
-        <div className="p-2 rounded-lg bg-filmic-seduction/15 text-center">
-          <div className="text-base font-semibold text-filmic-beige">
+        <div className="p-2 rounded-lg bg-bg-tertiary/30 text-center">
+          <div className="text-base font-semibold text-text-primary">
             {stats.avgRating ? `${stats.avgRating}` : '-'}
           </div>
-          <div className="text-xs text-filmic-rose">Avg Rating</div>
+          <div className="text-xs text-text-secondary">Avg Rating</div>
         </div>
       </div>
     </div>

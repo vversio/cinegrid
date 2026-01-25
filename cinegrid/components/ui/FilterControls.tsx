@@ -133,7 +133,7 @@ export default function FilterControls({
         <button
           onClick={onClearFilters}
           className={cn(
-            "flex items-center gap-1 px-2 py-1 text-xs text-filmic-rose hover:text-filmic-beige transition-colors",
+            "flex items-center gap-1 px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors",
             layout === 'vertical' && 'w-full justify-center'
           )}
         >

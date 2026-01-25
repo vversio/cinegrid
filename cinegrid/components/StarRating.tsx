@@ -71,8 +71,8 @@ export default function StarRating({
               className={cn(
                 'transition-colors',
                 isFilled 
-                  ? 'fill-yellow-400 text-yellow-400' 
-                  : 'fill-transparent text-filmic-rose/50'
+                  ? 'fill-white text-white' 
+                  : 'fill-transparent text-text-muted'
               )}
             />
           </motion.button>

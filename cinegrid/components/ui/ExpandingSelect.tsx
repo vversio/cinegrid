@@ -57,11 +57,11 @@ export default function ExpandingSelect({
         type="button"
         onClick={() => setOpen(!open)}
         className={cn(
-          'glass border-glass-border filter-control-button text-filmic-beige text-xs',
+          'glass border-glass text-text-primary text-xs',
           'flex w-full items-center justify-between gap-1.5 rounded-md px-2 py-1.5',
-          'hover:bg-filmic-seduction/30 transition-colors',
-          'focus:outline-none focus:ring-1 focus:ring-filmic-lavender',
-          open && 'bg-filmic-seduction/30'
+          'hover:bg-bg-tertiary/50 transition-colors',
+          'focus:outline-none focus:ring-1 focus:ring-border-focus',
+          open && 'bg-bg-tertiary/50'
         )}
       >
         <span className="truncate">{selectedOption?.label || placeholder}</span>
@@ -83,7 +83,7 @@ export default function ExpandingSelect({
             transition={{ duration: 0.2, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <div className="glass border-glass-border filter-control-dropdown rounded-md">
+            <div className="glass border-glass rounded-md">
               <div className="py-0.5">
                 {options.map((option) => (
                   <button
@@ -95,9 +95,9 @@ export default function ExpandingSelect({
                     }}
                     className={cn(
                       'relative flex w-full cursor-pointer select-none items-center rounded-sm py-1 px-2 text-xs outline-none',
-                      'text-filmic-beige hover:bg-filmic-seduction/30 transition-colors',
-                      'focus:bg-filmic-seduction/30',
-                      value === option.value && 'bg-filmic-seduction/20'
+                      'text-text-primary hover:bg-bg-tertiary/50 transition-colors',
+                      'focus:bg-bg-tertiary/50',
+                      value === option.value && 'bg-bg-tertiary/30'
                     )}
                   >
                     <span className="flex-1 text-left">{option.label}</span>

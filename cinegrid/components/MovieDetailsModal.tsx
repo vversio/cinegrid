@@ -100,21 +100,21 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-2xl md:w-full max-h-[90vh] overflow-y-auto rounded-xl glass border border-filmic-seduction/20 z-50"
+            className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-2xl md:w-full max-h-[90vh] overflow-y-auto rounded-xl glass border border-border-subtle z-50"
           >
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full glass hover:bg-filmic-seduction/30 transition-colors"
+              className="absolute top-4 right-4 z-10 p-2 rounded-full glass hover:bg-bg-tertiary/50 transition-colors"
               aria-label="Close"
             >
-              <X size={20} className="text-filmic-beige" />
+              <X size={20} className="text-text-primary" />
             </button>
 
             {/* Loading state */}
             {isLoading && (
               <div className="flex items-center justify-center h-64">
-                <div className="w-10 h-10 rounded-full border-2 border-filmic-lavender border-t-transparent animate-spin" />
+                <div className="w-10 h-10 rounded-full border-2 border-text-primary border-t-transparent animate-spin" />
               </div>
             )}
 
@@ -124,7 +124,7 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
                 <p className="text-red-400 mb-4">{error}</p>
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 rounded-lg glass text-filmic-beige hover:bg-filmic-seduction/30 transition-colors"
+                  className="px-4 py-2 rounded-lg glass text-text-primary hover:bg-bg-tertiary/50 transition-colors"
                 >
                   Close
                 </button>
@@ -144,7 +144,7 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
                       className="object-cover rounded-t-xl"
                       priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-filmic-charcoal via-filmic-charcoal/50 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/50 to-transparent" />
                   </div>
                 )}
 
@@ -165,18 +165,18 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
 
                     {/* Title and meta */}
                     <div className="flex-1 min-w-0">
-                      <h2 className="text-xl font-bold text-filmic-beige mb-1 line-clamp-2">
+                      <h2 className="text-xl font-bold text-text-primary mb-1 line-clamp-2">
                         {movie.title}
                       </h2>
                       
                       {details.tagline && (
-                        <p className="text-sm text-filmic-rose italic mb-2">
+                        <p className="text-sm text-text-secondary italic mb-2">
                           &ldquo;{details.tagline}&rdquo;
                         </p>
                       )}
 
                       {/* Meta info */}
-                      <div className="flex flex-wrap gap-3 text-xs text-filmic-beige-muted">
+                      <div className="flex flex-wrap gap-3 text-xs text-text-secondary">
                         {details.release_date && (
                           <span className="flex items-center gap-1">
                             <Calendar size={12} />
@@ -191,7 +191,7 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
                         )}
                         {details.vote_average > 0 && (
                           <span className="flex items-center gap-1">
-                            <Star size={12} className="text-filmic-yellow" />
+                            <Star size={12} className="text-text-primary" />
                             {details.vote_average.toFixed(1)}
                           </span>
                         )}
@@ -203,7 +203,7 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
                           {details.genres.map((genre) => (
                             <span
                               key={genre}
-                              className="px-2 py-0.5 text-xs rounded-full bg-filmic-seduction/30 text-filmic-beige"
+                              className="px-2 py-0.5 text-xs rounded-full bg-bg-tertiary/50 text-text-primary"
                             >
                               {genre}
                             </span>
@@ -215,27 +215,27 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
 
                   {/* Overview */}
                   <div className="mt-4">
-                    <h3 className="text-sm font-semibold text-filmic-beige mb-2">Overview</h3>
-                    <p className="text-sm text-filmic-beige-muted leading-relaxed">
+                    <h3 className="text-sm font-semibold text-text-primary mb-2">Overview</h3>
+                    <p className="text-sm text-text-secondary leading-relaxed">
                       {details.overview}
                     </p>
                   </div>
 
                   {/* Your watch info */}
-                  <div className="mt-6 pt-4 border-t border-filmic-seduction/20">
-                    <h3 className="text-xs font-medium text-filmic-rose uppercase mb-2">Your Watch</h3>
+                  <div className="mt-6 pt-4 border-t border-border-subtle">
+                    <h3 className="text-xs font-medium text-text-muted uppercase mb-2">Your Watch</h3>
                     <div className="flex items-center gap-4 text-sm">
-                      <span className="text-filmic-beige-muted">
+                      <span className="text-text-secondary">
                         Watched: {new Date(movie.watched_date).toLocaleDateString()}
                       </span>
                       {movie.user_rating && (
-                        <span className="flex items-center gap-1 text-filmic-yellow">
+                        <span className="flex items-center gap-1 text-text-primary">
                           <Star size={14} className="fill-current" />
                           {movie.user_rating}/5
                         </span>
                       )}
                       {movie.custom_category && (
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-filmic-lavender/20 text-filmic-lavender">
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-bg-tertiary/50 text-text-primary">
                           {movie.custom_category}
                         </span>
                       )}

@@ -76,7 +76,7 @@ export default function StatisticsPanel({ movies, isLoading }: StatisticsPanelPr
   if (isLoading) {
     return (
       <div className="space-y-3">
-        <h3 className="text-sm font-medium text-filmic-beige">Statistics</h3>
+        <h3 className="text-sm font-medium text-text-primary">Statistics</h3>
         <div className="grid grid-cols-2 gap-2">
           {[1, 2, 3, 4].map(i => (
             <div key={i} className="h-16 shimmer rounded-lg" />
@@ -91,29 +91,29 @@ export default function StatisticsPanel({ movies, isLoading }: StatisticsPanelPr
   }
 
   const statCards = [
-    { icon: Film, label: 'Movies', value: stats.totalMovies, color: 'text-filmic-blue' },
-    { icon: Tv, label: 'Series', value: stats.totalSeries, color: 'text-filmic-pink' },
-    { icon: Clock, label: 'Hours', value: `~${stats.totalHours}`, color: 'text-filmic-yellow' },
-    { icon: Star, label: 'Avg Rating', value: stats.avgRating ?? '-', color: 'text-filmic-lavender' },
-    { icon: Trophy, label: 'Top Genre', value: stats.topGenre || '-', color: 'text-filmic-magenta', isText: true },
-    { icon: Calendar, label: 'This Year', value: stats.thisYear, color: 'text-filmic-blue' },
+    { icon: Film, label: 'Movies', value: stats.totalMovies },
+    { icon: Tv, label: 'Series', value: stats.totalSeries },
+    { icon: Clock, label: 'Hours', value: `~${stats.totalHours}` },
+    { icon: Star, label: 'Avg Rating', value: stats.avgRating ?? '-' },
+    { icon: Trophy, label: 'Top Genre', value: stats.topGenre || '-', isText: true },
+    { icon: Calendar, label: 'This Year', value: stats.thisYear },
   ];
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium text-filmic-beige">Statistics</h3>
+      <h3 className="text-sm font-medium text-text-primary">Statistics</h3>
       <div className="grid grid-cols-2 gap-2">
         {statCards.map((stat) => (
           <div
             key={stat.label}
-            className="p-3 rounded-lg bg-filmic-seduction/15 flex items-center gap-2"
+            className="p-3 rounded-lg bg-bg-tertiary/30 flex items-center gap-2"
           >
-            <stat.icon size={16} className={stat.color} />
+            <stat.icon size={16} className="text-text-primary" />
             <div className="min-w-0">
-              <div className={`text-sm font-semibold text-filmic-beige ${stat.isText ? 'text-xs truncate' : ''}`}>
+              <div className={`text-sm font-semibold text-text-primary ${stat.isText ? 'text-xs truncate' : ''}`}>
                 {stat.value}
               </div>
-              <div className="text-xs text-filmic-rose truncate">{stat.label}</div>
+              <div className="text-xs text-text-secondary truncate">{stat.label}</div>
             </div>
           </div>
         ))}

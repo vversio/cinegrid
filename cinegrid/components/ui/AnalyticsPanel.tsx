@@ -1,6 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+import { motion } from 'framer-motion';
 
 // Simple subscription that never changes
 const emptySubscribe = () => () => {};
@@ -17,60 +18,81 @@ interface AnalyticsPanelProps {
   filterControls?: React.ReactNode;
 }
 
-export default function AnalyticsPanel({
+export default function AnalyticsPanel({  
   children,
   mainContent,
-  filterControls,
 }: AnalyticsPanelProps) {
   const isClient = useIsClient();
 
   // Avoid hydration mismatch
   if (!isClient) {
     return (
-      <div className="h-full flex">
-        <div className="w-[20%] p-3 pr-2">
-          <div className="glass rounded-xl p-3 h-full animate-pulse" />
-        </div>
-        <div className="flex-1 overflow-y-auto">
-          {mainContent}
+      <div className="h-full px-3 pb-3">
+        <div 
+          className="h-full rounded-b-2xl overflow-hidden flex"
+          style={{
+            background: 'rgba(20, 20, 20, 0.7)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+          }}
+        >
+          <div className="hidden lg:block w-[240px] animate-pulse" />
+          <div className="flex-1 overflow-y-auto">
+            {mainContent}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex">
-      {/* Analytics Sidebar - Fixed width, single frame */}
-      <div className="hidden lg:block w-[20%] p-3 pr-2 overflow-hidden">
-        <div className="glass large-panel rounded-xl p-3 h-full flex flex-col overflow-y-auto scrollbar-hide">
+    <div className="h-full px-3 pb-3">
+      {/* Unified glass container - seamless connection to navbar */}
+      <motion.div 
+        className="h-full rounded-b-2xl overflow-hidden flex"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{
+          background: 'rgba(20, 20, 20, 0.7)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        }}
+      >
+        {/* Analytics Sidebar - Fixed width, no border separator */}
+        <motion.div 
+          className="hidden lg:flex w-[240px] flex-col"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{
+            background: 'rgba(255, 255, 255, 0.02)',
+          }}
+        >
           {/* Analytics Dashboard */}
-          <div className="flex-shrink-0">
+          <div className="flex-1 overflow-y-auto scrollbar-hide p-4">
+            <motion.div 
+              className="mb-4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+            >
+              <h2 className="text-sm font-semibold text-text-primary mb-1">Analytics</h2>
+              <p className="text-xs text-text-muted">Your watching stats</p>
+            </motion.div>
             {children}
           </div>
-          
-          {/* Divider */}
-          {filterControls && (
-            <div className="my-3 border-t border-glass-border" />
-          )}
-          
-          {/* Filter Controls */}
-          {filterControls && (
-            <div className="flex-1 flex flex-col min-h-0">
-              <div className="mb-2 flex-shrink-0">
-                <span className="text-xs font-medium text-filmic-rose uppercase tracking-wide">Filters & Sort</span>
-              </div>
-              <div className="flex-1 overflow-y-auto scrollbar-hide">
-                {filterControls}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+        </motion.div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
-        {mainContent}
-      </div>
+        {/* Main Content Area */}
+        <motion.div 
+          className="flex-1 overflow-y-auto scrollbar-hide"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          {mainContent}
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

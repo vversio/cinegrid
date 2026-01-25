@@ -3,61 +3,59 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Filmic Grain Theme - Cool blue neon tones */
+/* Minimal Dark Theme - Neutral grays and whites */
 :root {
-  /* Filmic Grain color palette - blue neon vibrant */
-  --filmic-charcoal: #0a0c12;           /* Deep blue-black - Primary background */
-  --filmic-charcoal-light: #141822;     /* Elevated surfaces - dark blue-gray */
-  --filmic-seduction: #1e3a5f;          /* Deep blue - Secondary accents */
-  --filmic-seduction-light: #2563eb;    /* Vibrant blue hover */
-  --filmic-lavender: #e879f9;           /* Fuchsia pink - Links, CTAs */
-  --filmic-yellow: #fbbf24;             /* Amber gold - Highlights */
-  --filmic-beige: #f0e6ff;              /* Light purple-pink - Primary text */
-  --filmic-beige-muted: #d8b4fe;        /* Purple-pink muted - Secondary text */
-  --filmic-rose: #c026d3;               /* Magenta - Accents */
-  --filmic-rose-muted: rgba(192, 38, 211, 0.85); /* Muted magenta */
-  --filmic-violet-dark: #0f172a;        /* Deep navy */
+  /* Primary backgrounds */
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #252525;
+  --bg-elevated: #2a2a2a;
   
-  /* Neon colors */
-  --neon-blue: #3b82f6;
-  --neon-cyan: #22d3ee;
-  --neon-purple: #a855f7;
-  --neon-pink: #e879f9;
-  --neon-magenta: #d946ef;
+  /* Text colors */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+  --text-disabled: #444444;
   
-  /* Glass effects - blue-tinted with neon glow */
-  --glass-bg: rgba(10, 12, 18, 0.85);
-  --glass-border: rgba(59, 130, 246, 0.3);
-  --glass-border-glow: rgba(96, 165, 250, 0.25);
-  --glass-solid: #141822;
+  /* Border colors */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-hover: rgba(255, 255, 255, 0.18);
+  --border-focus: rgba(255, 255, 255, 0.25);
   
-  /* shadcn/ui overrides for Filmic theme */
+  /* Glass effects - neutral */
+  --glass-bg: rgba(26, 26, 26, 0.85);
+  --glass-bg-solid: #1a1a1a;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(255, 255, 255, 0.15);
+  
+  /* shadcn/ui overrides */
   --radius: 0.625rem;
-  --background: var(--filmic-charcoal);
-  --foreground: var(--filmic-beige);
-  --card: var(--filmic-charcoal-light);
-  --card-foreground: var(--filmic-beige);
-  --popover: var(--filmic-charcoal-light);
-  --popover-foreground: var(--filmic-beige);
-  --primary: var(--filmic-lavender);
-  --primary-foreground: var(--filmic-charcoal);
-  --secondary: var(--filmic-seduction);
-  --secondary-foreground: var(--filmic-beige);
-  --muted: var(--filmic-charcoal-light);
-  --muted-foreground: var(--filmic-rose);
-  --accent: var(--filmic-seduction);
-  --accent-foreground: var(--filmic-beige);
-  --destructive: #ef4444;
-  --border: var(--glass-border);
-  --input: rgba(82, 42, 111, 0.2);
-  --ring: var(--filmic-lavender);
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  --card: var(--bg-secondary);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-secondary);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--text-primary);
+  --primary-foreground: var(--bg-primary);
+  --secondary: var(--bg-tertiary);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-secondary);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-tertiary);
+  --accent-foreground: var(--text-primary);
+  --destructive: #dc2626;
+  --border: var(--border-subtle);
+  --input: var(--bg-tertiary);
+  --ring: rgba(255, 255, 255, 0.25);
   
-  /* Chart colors - Blue neon palette */
-  --chart-1: #60a5fa;  /* Bright blue */
-  --chart-2: #22d3ee;  /* Cyan */
-  --chart-3: #fbbf24;  /* Amber gold */
-  --chart-4: #8b5cf6;  /* Purple */
-  --chart-5: #3b82f6;  /* Blue */
+  /* Chart colors - grayscale */
+  --chart-1: #ffffff;
+  --chart-2: #c0c0c0;
+  --chart-3: #909090;
+  --chart-4: #606060;
+  --chart-5: #404040;
 }
 
 @theme inline {
@@ -87,19 +85,18 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   
-  /* Filmic custom colors */
-  --color-filmic-charcoal: var(--filmic-charcoal);
-  --color-filmic-charcoal-light: var(--filmic-charcoal-light);
-  --color-filmic-seduction: var(--filmic-seduction);
-  --color-filmic-seduction-light: var(--filmic-seduction-light);
-  --color-filmic-lavender: var(--filmic-lavender);
-  --color-filmic-yellow: var(--filmic-yellow);
-  --color-filmic-beige: var(--filmic-beige);
-  --color-filmic-beige-muted: var(--filmic-beige-muted);
-  --color-filmic-rose: var(--filmic-rose);
-  
-  /* Glass solid for dropdowns */
-  --color-glass-solid: var(--glass-solid);
+  /* Theme color utilities */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-hover: var(--border-hover);
+  --color-glass-bg: var(--glass-bg);
   --color-glass-border: var(--glass-border);
 }
 
@@ -112,7 +109,7 @@
     background-color: transparent;
   }
   html {
-    background-color: var(--filmic-charcoal);
+    background-color: var(--bg-primary);
   }
 }
 
@@ -125,154 +122,64 @@
   font-family: var(--font-sans);
 }
 
-/* Filmic utility classes */
+/* Glass utility classes */
 @layer utilities {
   .glass {
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 0 2px var(--glass-border-glow), 0 0 4px var(--glass-border-glow);
   }
   
-  .glass.large-panel {
-    box-shadow: 0 0 3px var(--glass-border-glow), 0 0 6px var(--glass-border-glow);
+  .glass:hover {
+    border-color: var(--glass-border-hover);
   }
   
   .glass-solid {
-    background: var(--glass-solid);
+    background: var(--glass-bg-solid);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 0 2px var(--glass-border-glow), 0 0 4px var(--glass-border-glow);
   }
   
   .glass-subtle {
-    background: rgba(42, 40, 43, 0.6);
+    background: rgba(26, 26, 26, 0.6);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
   
-  .border-glass-border {
+  .border-glass {
     border-color: var(--glass-border);
   }
   
-  /* Filter/sort buttons - clean borders, glow on hover */
-  .filter-control-button {
-    border: 1px solid var(--glass-border);
-    box-shadow: none !important;
-    isolation: isolate;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .filter-control-button:hover,
-  .filter-control-button[data-state="open"] {
-    box-shadow: 0 0 1px var(--glass-border-glow), 0 0 3px var(--glass-border-glow) !important;
-  }
-  
-  .filter-control-button,
-  .filter-control-button *,
-  .filter-control-button::before,
-  .filter-control-button::after {
-    box-shadow: none !important;
-  }
-  
-  .filter-control-button:hover,
-  .filter-control-button:hover *,
-  .filter-control-button[data-state="open"],
-  .filter-control-button[data-state="open"] * {
-    box-shadow: 0 0 1px var(--glass-border-glow), 0 0 3px var(--glass-border-glow) !important;
-  }
-  
-  .border-soft {
-    border-color: rgba(82, 42, 111, 0.1);
-  }
-  
-  /* Neon glow effects - vibrant blue */
-  .filmic-glow {
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
-  }
-  
-  .filmic-glow-intense {
-    box-shadow: 0 0 20px rgba(96, 165, 250, 0.6), 0 0 40px rgba(96, 165, 250, 0.3), 0 0 60px rgba(96, 165, 250, 0.15);
-  }
-  
-  .neon-glow-blue {
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.7), 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2);
-  }
-  
-  .neon-glow-cyan {
-    box-shadow: 0 0 10px rgba(34, 211, 238, 0.7), 0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(34, 211, 238, 0.2);
-  }
-  
-  .neon-glow-purple {
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.7), 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.2);
-  }
-  
-  .filmic-glow-yellow {
-    box-shadow: 0 0 10px rgba(251, 191, 36, 0.6), 0 0 20px rgba(251, 191, 36, 0.3);
-  }
-  
-  .filmic-lift {
-    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
-  }
-  
-  /* Filmic text colors */
-  .text-filmic-heading {
-    color: var(--filmic-beige);
-  }
-  
-  .text-filmic-body {
-    color: var(--filmic-beige-muted);
-  }
-  
-  .text-filmic-muted {
-    color: var(--filmic-rose);
-  }
-  
-  .text-filmic-accent {
-    color: var(--filmic-lavender);
-  }
-  
-  .text-filmic-highlight {
-    color: var(--filmic-yellow);
-  }
-  
-  /* Blurry spread effect for borders */
-  [class*="border-glass-border"]:not(.filter-control-button):not(.filter-control-button *):not(.filter-control-dropdown),
-  [class*="border-filmic-seduction"]:not(.filter-control-button):not(.filter-control-button *):not(.filter-control-dropdown) {
-    box-shadow: 0 0 2px var(--glass-border-glow), 0 0 4px var(--glass-border-glow);
-  }
-  
-  .filter-control-dropdown {
-    box-shadow: 0 0 1px var(--glass-border-glow), 0 0 2px var(--glass-border-glow) !important;
+  .border-glass-hover {
+    border-color: var(--glass-border-hover);
   }
 }
 
-/* Typography scale - Filmic Grain colors */
+/* Typography scale */
 .h1 {
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--filmic-beige);
+  color: var(--text-primary);
 }
 
 .h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--filmic-beige);
+  color: var(--text-primary);
 }
 
 .body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
-  color: var(--filmic-beige-muted);
+  color: var(--text-secondary);
 }
 
 .caption {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--filmic-rose);
+  color: var(--text-secondary);
 }
 
 .label {
@@ -280,10 +187,10 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--filmic-rose);
+  color: var(--text-muted);
 }
 
-/* Shimmer effect - Filmic colors */
+/* Shimmer effect */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -296,51 +203,38 @@
 .shimmer {
   background: linear-gradient(
     90deg,
-    var(--filmic-charcoal-light) 0%,
-    var(--filmic-seduction) 50%,
-    var(--filmic-charcoal-light) 100%
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 50%,
+    var(--bg-secondary) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
-/* Focus ring for accessibility - Filmic lavender */
-.focus-filmic {
+/* Focus ring for accessibility */
+.focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
-  --tw-ring-color: var(--filmic-lavender);
-  --tw-ring-offset-color: var(--filmic-charcoal);
+  --tw-ring-color: var(--ring);
+  --tw-ring-offset-color: var(--bg-primary);
 }
 
-/* Scrollbar styling - Filmic accent */
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--filmic-charcoal-light);
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--filmic-seduction);
+  background: var(--bg-tertiary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--filmic-lavender);
-}
-
-/* Text glow effect - Neon purple-pink */
-.text-filmic-glow {
-  text-shadow: 0 0 10px rgba(232, 121, 249, 0.8), 0 0 20px rgba(232, 121, 249, 0.4), 0 0 40px rgba(232, 121, 249, 0.2);
-}
-
-.text-neon-glow {
-  text-shadow: 0 0 8px rgba(232, 121, 249, 0.9), 0 0 15px rgba(217, 70, 239, 0.6), 0 0 30px rgba(192, 38, 211, 0.4);
-}
-
-.text-neon-pink {
-  text-shadow: 0 0 8px rgba(232, 121, 249, 1), 0 0 15px rgba(232, 121, 249, 0.7), 0 0 30px rgba(232, 121, 249, 0.4);
+  background: var(--bg-elevated);
 }
 
 /* Hide scrollbar utility */
@@ -353,40 +247,47 @@
   display: none;
 }
 
-/* Film grain texture effect (optional) */
-.film-grain {
-  filter: grayscale(5%) contrast(102%);
+/* Subtle hover lift effect */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.film-grain::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url('/film-grain.png');
-  background-repeat: repeat;
-  opacity: 0.03;
-  mix-blend-mode: multiply;
-  pointer-events: none;
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Background with GIF support */
-.bg-guardians {
-  background-image: url('/guardians.gif');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+/* Button base styles */
+.btn-primary {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  font-weight: 600;
+  transition: opacity 0.2s ease;
 }
 
-/* Subtle pulse animation for accents */
-@keyframes filmic-pulse {
-  0%, 100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 1;
-  }
+.btn-primary:hover {
+  opacity: 0.9;
 }
 
-.animate-filmic-pulse {
-  animation: filmic-pulse 3s ease-in-out infinite;
+.btn-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-hover);
+}
+
+/* Card styles */
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+}
+
+.card:hover {
+  border-color: var(--border-hover);
 }

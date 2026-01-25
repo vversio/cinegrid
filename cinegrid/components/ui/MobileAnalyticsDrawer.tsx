@@ -18,11 +18,11 @@ export default function MobileAnalyticsDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent 
         side="left" 
-        className="w-[340px] sm:w-[400px] bg-filmic-charcoal border-r border-glass-border p-0"
+        className="w-[340px] sm:w-[400px] bg-bg-secondary border-r border-border-subtle p-0"
       >
-        <SheetHeader className="p-4 border-b border-glass-border">
-          <SheetTitle className="text-filmic-beige flex items-center gap-2">
-            <BarChart3 size={20} className="text-filmic-lavender" />
+        <SheetHeader className="p-4 border-b border-border-subtle">
+          <SheetTitle className="text-text-primary flex items-center gap-2">
+            <BarChart3 size={20} className="text-text-primary" />
             Analytics
           </SheetTitle>
         </SheetHeader>
@@ -39,10 +39,10 @@ export function AnalyticsFAB({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-24 right-6 lg:hidden z-30 w-12 h-12 rounded-full glass neon-glow-blue flex items-center justify-center hover:scale-110 transition-transform"
+      className="fixed bottom-24 right-6 lg:hidden z-30 w-12 h-12 rounded-full glass flex items-center justify-center hover:scale-110 transition-transform"
       aria-label="Open analytics"
     >
-      <BarChart3 size={20} className="text-filmic-lavender" />
+      <BarChart3 size={20} className="text-text-primary" />
     </button>
   );
 }

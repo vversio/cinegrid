@@ -63,13 +63,13 @@ export default function AuthButton({ user, onAuthChange }: AuthButtonProps) {
   if (user && isAdmin) {
     return (
       <div className="flex items-center gap-3">
-        <span className="text-sm text-filmic-rose truncate max-w-[150px]">
+        <span className="text-sm text-text-secondary truncate max-w-[150px]">
           {user.email}
         </span>
         <button
           onClick={handleSignOut}
           disabled={isLoading}
-          className="px-3 py-1.5 text-sm rounded-md glass border border-glass-border hover:bg-filmic-seduction/30 transition-colors disabled:opacity-50 text-filmic-beige"
+          className="px-3 py-1.5 text-sm rounded-md glass border border-border-subtle hover:bg-bg-tertiary/50 transition-colors disabled:opacity-50 text-text-primary"
         >
           {isLoading ? '...' : 'Sign Out'}
         </button>
@@ -86,7 +86,7 @@ export default function AuthButton({ user, onAuthChange }: AuthButtonProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="px-3 py-1.5 text-sm rounded-md border border-glass-border bg-filmic-seduction/15 text-filmic-beige placeholder:text-filmic-rose/50 w-40 focus:outline-none focus:ring-2 focus:ring-filmic-lavender"
+          className="px-3 py-1.5 text-sm rounded-md border border-border-subtle bg-bg-tertiary/30 text-text-primary placeholder:text-text-muted w-40 focus:outline-none focus:ring-2 focus:ring-border-focus"
         />
         <input
           type="password"
@@ -95,12 +95,12 @@ export default function AuthButton({ user, onAuthChange }: AuthButtonProps) {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
-          className="px-3 py-1.5 text-sm rounded-md border border-glass-border bg-filmic-seduction/15 text-filmic-beige placeholder:text-filmic-rose/50 w-32 focus:outline-none focus:ring-2 focus:ring-filmic-lavender"
+          className="px-3 py-1.5 text-sm rounded-md border border-border-subtle bg-bg-tertiary/30 text-text-primary placeholder:text-text-muted w-32 focus:outline-none focus:ring-2 focus:ring-border-focus"
         />
         <button
           type="submit"
           disabled={isLoading}
-          className="px-3 py-1.5 text-sm rounded-md bg-filmic-lavender text-filmic-beige hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="px-3 py-1.5 text-sm rounded-md bg-text-primary text-bg-primary hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {isLoading ? '...' : 'Sign In'}
         </button>
@@ -112,7 +112,7 @@ export default function AuthButton({ user, onAuthChange }: AuthButtonProps) {
             setPassword('');
             setError('');
           }}
-          className="text-filmic-rose hover:text-filmic-beige"
+          className="text-text-secondary hover:text-text-primary"
         >
           x
         </button>
@@ -125,7 +125,7 @@ export default function AuthButton({ user, onAuthChange }: AuthButtonProps) {
   return (
     <button
       onClick={() => setShowForm(true)}
-      className="px-4 py-1.5 text-sm rounded-md glass border border-glass-border text-filmic-beige hover:bg-filmic-seduction/30 transition-colors"
+      className="px-4 py-1.5 text-sm rounded-md glass border border-border-subtle text-text-primary hover:bg-bg-tertiary/50 transition-colors"
     >
       vversio
     </button>

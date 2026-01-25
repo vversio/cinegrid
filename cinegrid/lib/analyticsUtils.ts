@@ -128,16 +128,16 @@ export function getThisYearStartDate(): Date {
 }
 
 /**
- * Chart color palette - Blue neon spectrum
+ * Chart color palette - Grayscale
  */
 export const CHART_COLORS = [
-  '#60a5fa', // Bright blue
-  '#22d3ee', // Cyan
-  '#fbbf24', // Amber gold
-  '#8b5cf6', // Purple
-  '#3b82f6', // Blue
-  '#e0e7ff', // Light blue-white
-  '#1e3a5f', // Deep blue
+  '#ffffff', // White
+  '#c0c0c0', // Light gray
+  '#909090', // Medium gray
+  '#707070', // Gray
+  '#606060', // Darker gray
+  '#505050', // Dark gray
+  '#404040', // Very dark gray
 ];
 
 export function getChartColor(index: number): string {

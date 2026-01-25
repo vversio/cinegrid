@@ -11,6 +11,7 @@ import type { User } from '@supabase/supabase-js';
 
 import BackgroundEffect from '@/components/ui/BackgroundEffect';
 import Header from '@/components/ui/Header';
+import AnalyticsPanel from '@/components/ui/AnalyticsPanel';
 import MobileAnalyticsDrawer, { AnalyticsFAB } from '@/components/ui/MobileAnalyticsDrawer';
 import FilterControls from '@/components/ui/FilterControls';
 import GenreTrendChart from '@/components/GenreTrendChart';
@@ -120,8 +121,8 @@ function HomeContent() {
     return getUniqueGenres(movies);
   }, [movies]);
 
-  // Filter controls component - horizontal layout for navbar
-  const filterControls = (
+  // Filter controls for navbar (horizontal layout)
+  const navbarFilterControls = (
     <FilterControls
       filterState={filterState}
       availableGenres={availableGenres}
@@ -136,11 +137,27 @@ function HomeContent() {
     />
   );
 
-  // Analytics content
+  // Filter controls for mobile drawer (vertical layout)
+  const mobileFilterControls = (
+    <FilterControls
+      filterState={filterState}
+      availableGenres={availableGenres}
+      onSortChange={(sort) => updateFilters({ sort })}
+      onMediaTypeChange={(mediaType) => updateFilters({ mediaType })}
+      onGenreChange={(genres) => updateFilters({ genres })}
+      onMinRatingChange={(minRating) => updateFilters({ minRating })}
+      onSearchChange={(search) => updateFilters({ search })}
+      onClearFilters={clearFilters}
+      hasActiveFilters={hasActiveFilters}
+      layout="vertical"
+    />
+  );
+
+  // Analytics content for sidebar
   const analyticsContent = (
-    <div className="space-y-6">
-      <GenreTrendChart movies={movies} isLoading={isLoading} />
+    <div className="space-y-4">
       <StatisticsPanel movies={movies} isLoading={isLoading} />
+      <GenreTrendChart movies={movies} isLoading={isLoading} />
     </div>
   );
 
@@ -162,9 +179,9 @@ function HomeContent() {
       <div>
         {/* Grid header with count */}
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-semibold text-filmic-beige">
+          <h2 className="text-base font-semibold text-text-primary">
             {hasActiveFilters ? 'Filtered Results' : 'Recently Added'}
-            <span className="text-xs text-filmic-rose ml-2 font-normal">
+            <span className="text-xs text-text-secondary ml-2 font-normal">
               {filteredMovies.length} {filteredMovies.length === 1 ? 'item' : 'items'}
             </span>
           </h2>
@@ -176,13 +193,22 @@ function HomeContent() {
             <p className="text-red-400 text-sm">Failed to load movies. Please refresh the page.</p>
           </div>
         ) : filteredMovies.length > 0 ? (
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3">
+          <motion.div 
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+          >
             {filteredMovies.map((movie, index) => (
               <motion.div
                 key={movie.id}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.15, delay: index * 0.02 }}
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ 
+                  duration: 0.4, 
+                  delay: index * 0.03,
+                  ease: [0.25, 0.46, 0.45, 0.94]
+                }}
               >
                 <MovieCard
                   movie={movie}
@@ -196,19 +222,19 @@ function HomeContent() {
                 />
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="w-12 h-12 rounded-full bg-filmic-seduction/20 flex items-center justify-center mb-3">
+            <div className="w-12 h-12 rounded-full bg-bg-tertiary/50 flex items-center justify-center mb-3">
               <span className="text-lg opacity-50">[ ]</span>
             </div>
-            <p className="text-filmic-rose text-sm">
+            <p className="text-text-secondary text-sm">
               {hasActiveFilters ? 'No movies match your filters' : 'No movies or series yet'}
             </p>
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="mt-3 px-3 py-1.5 text-xs text-filmic-lavender hover:text-filmic-beige transition-colors"
+                className="mt-3 px-3 py-1.5 text-xs text-text-primary hover:text-text-primary transition-colors"
               >
                 Clear filters
               </button>
@@ -220,54 +246,77 @@ function HomeContent() {
   );
 
   return (
-    <div className="min-h-screen text-filmic-beige relative">
+    <div className="h-screen flex flex-col text-text-primary relative overflow-hidden">
       <BackgroundEffect />
       <Toaster 
         position="top-right" 
         toastOptions={{
           style: {
-            background: 'rgba(10, 12, 18, 0.95)',
-            border: '1px solid rgba(59, 130, 246, 0.4)',
-            color: '#f0e6ff',
-            boxShadow: '0 0 20px rgba(59, 130, 246, 0.2)',
+            background: '#1a1a1a',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            color: '#ffffff',
           },
         }}
       />
 
-      {/* Header with filter controls */}
+      {/* Header - top of the encapsulated frame */}
       <Header
         user={user}
         onAuthChange={handleAuthChange}
         onOpenAnalytics={() => setMobileAnalyticsOpen(true)}
         showAnalyticsButton={true}
-        filterControls={filterControls}
+        filterControls={mobileFilterControls}
+        navbarFilterControls={navbarFilterControls}
       />
 
-      {/* Main layout */}
-      <main className="h-[calc(100vh-48px)] relative z-10 overflow-y-auto">
+      {/* Main layout with analytics sidebar */}
+      <main className="flex-1 relative z-10 overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-10 h-10 rounded-full border-2 border-filmic-lavender border-t-transparent animate-spin" />
-              <p className="text-filmic-rose text-sm">Loading your collection...</p>
-            </div>
+          <div className="h-full px-3 pb-3">
+            <motion.div 
+              className="h-full rounded-b-2xl flex items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{
+                background: 'rgba(20, 20, 20, 0.7)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+              }}
+            >
+              <motion.div 
+                className="flex flex-col items-center gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <motion.div 
+                  className="w-12 h-12 rounded-full border-2 border-text-primary/30 border-t-text-primary"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                />
+                <p className="text-text-secondary text-sm">Loading your collection...</p>
+              </motion.div>
+            </motion.div>
           </div>
         ) : (
-          <>
-            {mainContent}
-
-            {/* Mobile Analytics Drawer */}
-            <MobileAnalyticsDrawer
-              open={mobileAnalyticsOpen}
-              onOpenChange={setMobileAnalyticsOpen}
-            >
-              {analyticsContent}
-            </MobileAnalyticsDrawer>
-
-            {/* Mobile Analytics FAB */}
-            <AnalyticsFAB onClick={() => setMobileAnalyticsOpen(true)} />
-          </>
+          <AnalyticsPanel
+            mainContent={mainContent}
+          >
+            {analyticsContent}
+          </AnalyticsPanel>
         )}
+
+        {/* Mobile Analytics Drawer */}
+        <MobileAnalyticsDrawer
+          open={mobileAnalyticsOpen}
+          onOpenChange={setMobileAnalyticsOpen}
+        >
+          {analyticsContent}
+        </MobileAnalyticsDrawer>
+
+        {/* Mobile Analytics FAB - only on smaller screens */}
+        <div className="lg:hidden">
+          <AnalyticsFAB onClick={() => setMobileAnalyticsOpen(true)} />
+        </div>
       </main>
 
       {/* Floating add button - only show for admin */}
@@ -275,12 +324,12 @@ function HomeContent() {
         <>
           <motion.button
             onClick={() => setIsModalOpen(true)}
-            className="fixed bottom-8 right-8 w-14 h-14 rounded-full glass neon-glow-blue flex items-center justify-center z-30"
-            whileHover={{ scale: 1.1 }}
+            className="fixed bottom-6 right-6 w-12 h-12 rounded-full glass border border-border-subtle flex items-center justify-center z-30 hover:bg-white/10 transition-colors"
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Add movie or series"
           >
-            <Plus size={24} className="text-filmic-lavender" />
+            <Plus size={20} className="text-text-primary" />
           </motion.button>
 
           <AddMovieModal
@@ -307,7 +356,7 @@ export default function Home() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 rounded-full border-2 border-filmic-lavender border-t-transparent animate-spin" />
+        <div className="w-12 h-12 rounded-full border-2 border-text-primary border-t-transparent animate-spin" />
       </div>
     }>
       <HomeContent />

@@ -3,28 +3,45 @@
 export default function BackgroundEffect() {
   return (
     <div className="fixed inset-0 z-0 overflow-hidden">
-      {/* Guardians GIF background - full opacity */}
+      {/* Base GIF Background */}
       <div 
-        className="absolute inset-0"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(/guardians.gif)',
+          backgroundImage: 'url(/synthwave.gif)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
         }}
       />
-      {/* Cool dark overlay for readability */}
+      
+      {/* Dark overlay for better contrast */}
       <div 
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(180deg, rgba(10, 12, 18, 0.5) 0%, rgba(10, 12, 18, 0.6) 100%)',
+          background: 'rgba(0, 0, 0, 0.45)',
         }}
       />
-      {/* Blue neon gradient accent */}
+      
+      {/* Blur overlay layer */}
       <div 
-        className="absolute inset-0"
+        className="absolute inset-0 backdrop-blur-[2px]"
         style={{
-          background: 'radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.15) 0%, transparent 60%)',
+          background: 'rgba(15, 15, 15, 0.3)',
+        }}
+      />
+      
+      {/* Film grain / noise texture overlay */}
+      <div 
+        className="absolute inset-0 opacity-[0.08] pointer-events-none mix-blend-overlay"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat',
+        }}
+      />
+      
+      {/* Vignette effect */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%)',
         }}
       />
     </div>

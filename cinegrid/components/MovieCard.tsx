@@ -73,12 +73,12 @@ export default function MovieCard({
   const isHero = variant === 'hero';
   const isCompact = variant === 'compact';
   const cardClasses = cn(
-    'group relative rounded-lg overflow-hidden',
+    'group relative rounded-xl overflow-hidden',
     isHero 
-      ? 'w-[180px] h-[270px] flex-shrink-0 glass border border-filmic-seduction/10' 
+      ? 'w-[190px] h-[285px] flex-shrink-0' 
       : isCompact
-        ? 'w-[140px] h-[210px] flex-shrink-0 bg-filmic-charcoal-light'
-        : 'aspect-[2/3] bg-filmic-charcoal-light'
+        ? 'w-[150px] h-[225px] flex-shrink-0'
+        : 'aspect-[2/3]'
   );
 
   // Handle keyboard navigation
@@ -98,10 +98,17 @@ export default function MovieCard({
       onBlur={() => setIsHovered(false)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      whileHover={isCompact ? { y: -4, scale: 1.02 } : { y: -6, scale: 1.02 }}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
+      whileHover={isCompact ? { y: -5, scale: 1.02 } : { y: -8, scale: 1.02 }}
+      transition={{ 
+        duration: 0.35, 
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
       style={{
-        boxShadow: isHovered ? '0 10px 25px rgba(82, 42, 111, 0.25)' : 'none',
+        boxShadow: isHovered 
+          ? '0 15px 30px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 255, 255, 0.03)' 
+          : '0 4px 12px rgba(0, 0, 0, 0.2)',
+        background: 'rgba(26, 26, 26, 0.6)',
+        backdropFilter: 'blur(8px)',
       }}
       tabIndex={onViewDetails ? 0 : undefined}
       role={onViewDetails ? 'button' : undefined}
@@ -119,7 +126,7 @@ export default function MovieCard({
           loading={priority ? 'eager' : 'lazy'}
         />
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-filmic-seduction to-filmic-charcoal text-filmic-rose p-2">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-bg-tertiary to-bg-primary text-text-muted p-2">
           {movie.media_type === 'series' ? (
             <Tv size={isCompact ? 20 : 28} className="mb-1 opacity-50" />
           ) : (
@@ -132,7 +139,7 @@ export default function MovieCard({
       {/* Media type badge */}
       {movie.media_type === 'series' && (
         <div className={cn(
-          "absolute top-1.5 left-1.5 px-1.5 py-0.5 font-medium glass rounded text-filmic-beige",
+          "absolute top-1.5 left-1.5 px-1.5 py-0.5 font-medium glass rounded text-text-primary",
           isCompact ? "text-[10px]" : "text-xs"
         )}>
           Series
@@ -142,22 +149,26 @@ export default function MovieCard({
       {/* Favorite indicator (always visible if favorited) */}
       {movie.is_favorite && !isHovered && (
         <div className="absolute top-1.5 right-1.5">
-          <Heart size={isCompact ? 12 : 16} className="fill-red-500 text-red-500" />
+          <Heart size={isCompact ? 12 : 16} className="fill-white text-white" />
         </div>
       )}
 
-      {/* Hover overlay */}
+      {/* Hover overlay with glassmorphism */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"
+        className="absolute inset-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{
+          background: 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 40%, rgba(0, 0, 0, 0.2) 70%, transparent 100%)',
+          backdropFilter: isHovered ? 'blur(2px)' : 'none',
+        }}
       >
         {/* Content at bottom */}
         <div className={cn("absolute bottom-0 left-0 right-0", isCompact ? "p-2" : "p-3")}>
           {/* Custom category badge */}
           {movie.custom_category && !isCompact && (
-            <span className="inline-block px-2 py-0.5 mb-1 text-[10px] font-medium glass-subtle rounded-full text-filmic-beige">
+            <span className="inline-block px-2 py-0.5 mb-1 text-[10px] font-medium glass-subtle rounded-full text-text-primary">
               {movie.custom_category}
             </span>
           )}
@@ -190,8 +201,8 @@ export default function MovieCard({
               className={cn(
                 'p-1.5 rounded-full glass transition-colors disabled:opacity-50',
                 movie.is_favorite 
-                  ? 'text-red-500 hover:bg-red-500/20' 
-                  : 'text-white/80 hover:text-red-400'
+                  ? 'text-white hover:bg-white/20' 
+                  : 'text-white/80 hover:text-white'
               )}
               aria-label={movie.is_favorite ? 'Remove from favorites' : 'Add to favorites'}
             >
@@ -206,7 +217,7 @@ export default function MovieCard({
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="p-1.5 rounded-full glass text-white/80 hover:text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                className="p-1.5 rounded-full glass text-white/80 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
                 aria-label="Delete"
               >
                 <Trash2 size={isCompact ? 12 : 14} />

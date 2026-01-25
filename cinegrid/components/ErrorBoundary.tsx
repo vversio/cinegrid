@@ -44,13 +44,13 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
             <AlertTriangle size={32} className="text-red-400" />
           </div>
-          <h2 className="text-lg font-semibold text-filmic-beige mb-2">Something went wrong</h2>
-          <p className="text-sm text-filmic-rose mb-4 max-w-md">
+          <h2 className="text-lg font-semibold text-text-primary mb-2">Something went wrong</h2>
+          <p className="text-sm text-text-secondary mb-4 max-w-md">
             {this.state.error?.message || 'An unexpected error occurred'}
           </p>
           <button
             onClick={this.handleReset}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg glass text-filmic-beige hover:bg-filmic-seduction/30 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg glass text-text-primary hover:bg-bg-tertiary/50 transition-colors"
           >
             <RefreshCw size={16} />
             Try again
@@ -76,13 +76,13 @@ export function ErrorFallback({
       <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
         <AlertTriangle size={32} className="text-red-400" />
       </div>
-      <h2 className="text-lg font-semibold text-filmic-beige mb-2">Something went wrong</h2>
-      <p className="text-sm text-filmic-rose mb-4 max-w-md">
+      <h2 className="text-lg font-semibold text-text-primary mb-2">Something went wrong</h2>
+      <p className="text-sm text-text-secondary mb-4 max-w-md">
         {error.message || 'An unexpected error occurred'}
       </p>
       <button
         onClick={resetErrorBoundary}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg glass text-filmic-beige hover:bg-filmic-seduction/30 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 rounded-lg glass text-text-primary hover:bg-bg-tertiary/50 transition-colors"
       >
         <RefreshCw size={16} />
         Try again

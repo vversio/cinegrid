@@ -114,25 +114,25 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-md glass large-panel rounded-xl shadow-2xl border border-glass-border max-h-[90vh] overflow-y-auto"
+            className="relative w-full max-w-md glass rounded-xl shadow-2xl border border-border-subtle max-h-[90vh] overflow-y-auto"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-glass-border">
-              <h2 className="text-lg font-semibold text-filmic-beige">
+            <div className="flex items-center justify-between p-4 border-b border-border-subtle">
+              <h2 className="text-lg font-semibold text-text-primary">
                 Add Watched {mediaType === 'movie' ? 'Movie' : 'Series'}
               </h2>
               <button
                 onClick={handleClose}
-                className="p-2 rounded-lg hover:bg-filmic-seduction/30 transition-colors"
+                className="p-2 rounded-lg hover:bg-bg-tertiary/50 transition-colors"
               >
-                <X size={20} className="text-filmic-rose" />
+                <X size={20} className="text-text-secondary" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-4 space-y-4">
               {/* Media Type Toggle */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-filmic-beige">Media Type</label>
+                <label className="block text-sm font-medium mb-2 text-text-primary">Media Type</label>
                 <div className="flex gap-2">
                   <button
                     type="button"
@@ -142,8 +142,8 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       mediaType === 'movie'
-                        ? 'bg-filmic-lavender text-white'
-                        : 'bg-filmic-seduction/20 text-filmic-rose hover:bg-filmic-seduction/40'
+                        ? 'bg-text-primary text-bg-primary'
+                        : 'bg-bg-tertiary/50 text-text-secondary hover:bg-bg-tertiary'
                     }`}
                   >
                     Movie
@@ -156,8 +156,8 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       mediaType === 'series'
-                        ? 'bg-filmic-lavender text-white'
-                        : 'bg-filmic-seduction/20 text-filmic-rose hover:bg-filmic-seduction/40'
+                        ? 'bg-text-primary text-bg-primary'
+                        : 'bg-bg-tertiary/50 text-text-secondary hover:bg-bg-tertiary'
                     }`}
                   >
                     Series
@@ -167,7 +167,7 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
 
               {/* Search */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-filmic-beige">
+                <label className="block text-sm font-medium mb-2 text-text-primary">
                   Search {mediaType === 'movie' ? 'Movie' : 'Series'}
                 </label>
                 <MovieSearch onSelect={handleItemSelect} mediaType={mediaType} />
@@ -178,7 +178,7 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-3 p-3 bg-filmic-seduction/15 rounded-lg border border-filmic-seduction/15"
+                  className="flex items-center gap-3 p-3 bg-bg-tertiary/30 rounded-lg border border-border-subtle"
                 >
                   {selectedItem.poster_path && (
                     <div className="relative w-12 h-18 rounded overflow-hidden flex-shrink-0">
@@ -192,10 +192,10 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
                     </div>
                   )}
                   <div className="min-w-0">
-                    <p className="font-medium text-filmic-beige truncate">
+                    <p className="font-medium text-text-primary truncate">
                       {'title' in selectedItem ? selectedItem.title : selectedItem.name}
                     </p>
-                    <p className="text-sm text-filmic-rose">
+                    <p className="text-sm text-text-secondary">
                       {('release_date' in selectedItem ? selectedItem.release_date : selectedItem.first_air_date)?.split('-')[0] || 'Unknown year'}
                     </p>
                   </div>
@@ -204,36 +204,36 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
 
               {/* Date Watched */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-filmic-beige">Date Watched</label>
+                <label className="block text-sm font-medium mb-2 text-text-primary">Date Watched</label>
                 <input
                   type="date"
                   value={watchedDate}
                   onChange={(e) => setWatchedDate(e.target.value)}
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-glass-border bg-filmic-seduction/15 text-filmic-beige focus:outline-none focus:ring-2 focus:ring-filmic-lavender"
+                  className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg-tertiary/30 text-text-primary focus:outline-none focus:ring-2 focus:ring-border-focus"
                 />
               </div>
 
               {/* Genre */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-filmic-beige">Genre</label>
+                <label className="block text-sm font-medium mb-2 text-text-primary">Genre</label>
                 <select
                   value={genre}
                   onChange={(e) => setGenre(e.target.value)}
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-glass-border bg-filmic-seduction/15 text-filmic-beige focus:outline-none focus:ring-2 focus:ring-filmic-lavender"
+                  className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg-tertiary/30 text-text-primary focus:outline-none focus:ring-2 focus:ring-border-focus"
                 >
-                  <option value="" className="bg-filmic-charcoal">Select genre...</option>
+                  <option value="" className="bg-bg-secondary">Select genre...</option>
                   {genreOptions.map((g) => (
-                    <option key={g} value={g} className="bg-filmic-charcoal">{g}</option>
+                    <option key={g} value={g} className="bg-bg-secondary">{g}</option>
                   ))}
                 </select>
               </div>
 
               {/* Rating (Optional) */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-filmic-beige">
-                  Rating <span className="text-filmic-rose">(optional)</span>
+                <label className="block text-sm font-medium mb-2 text-text-primary">
+                  Rating <span className="text-text-muted">(optional)</span>
                 </label>
                 <div className="flex items-center gap-2">
                   <StarRating
@@ -245,7 +245,7 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
                     <button
                       type="button"
                       onClick={() => setRating(null)}
-                      className="text-xs text-filmic-rose hover:text-filmic-beige transition-colors"
+                      className="text-xs text-text-secondary hover:text-text-primary transition-colors"
                     >
                       Clear
                     </button>
@@ -255,16 +255,16 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
 
               {/* Favorite Toggle */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-filmic-beige">
-                  Add to Favorites <span className="text-filmic-rose">(optional)</span>
+                <label className="block text-sm font-medium mb-2 text-text-primary">
+                  Add to Favorites <span className="text-text-muted">(optional)</span>
                 </label>
                 <button
                   type="button"
                   onClick={() => setIsFavorite(!isFavorite)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                     isFavorite
-                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                      : 'bg-filmic-seduction/15 text-filmic-rose border border-glass-border hover:bg-filmic-seduction/20'
+                      ? 'bg-white/10 text-white border border-white/30'
+                      : 'bg-bg-tertiary/30 text-text-secondary border border-border-subtle hover:bg-bg-tertiary/50'
                   }`}
                 >
                   <Heart size={18} className={isFavorite ? 'fill-current' : ''} />
@@ -274,15 +274,15 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
 
               {/* Custom Category */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-filmic-beige">
-                  Custom Category <span className="text-filmic-rose">(optional)</span>
+                <label className="block text-sm font-medium mb-2 text-text-primary">
+                  Custom Category <span className="text-text-muted">(optional)</span>
                 </label>
                 <input
                   type="text"
                   value={customCategory}
                   onChange={(e) => setCustomCategory(e.target.value)}
                   placeholder="e.g., Late Night Horror, Comfort Movies"
-                  className="w-full px-3 py-2 rounded-lg border border-glass-border bg-filmic-seduction/15 text-filmic-beige placeholder:text-filmic-rose/50 focus:outline-none focus:ring-2 focus:ring-filmic-lavender"
+                  className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg-tertiary/30 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-border-focus"
                 />
               </div>
 
@@ -295,7 +295,7 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
               <button
                 type="submit"
                 disabled={isSubmitting || !selectedItem}
-                className="w-full py-3 rounded-lg bg-filmic-lavender text-white font-medium hover:bg-filmic-seduction transition-colors disabled:opacity-50 disabled:cursor-not-allowed filmic-glow"
+                className="w-full py-3 rounded-lg bg-text-primary text-bg-primary font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Adding...' : `Add ${mediaType === 'movie' ? 'Movie' : 'Series'}`}
               </button>
