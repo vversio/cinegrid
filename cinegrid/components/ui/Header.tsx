@@ -27,7 +27,7 @@ export default function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 px-3 pt-3">
+    <header className="sticky top-0 z-[100] px-3 pt-3">
       {/* Glass navbar - seamless top of frame (no bottom border) */}
       <motion.div 
         className="rounded-t-2xl overflow-hidden"
@@ -35,7 +35,7 @@ export default function Header({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
         style={{
-          background: 'rgba(20, 20, 20, 0.7)',
+          background: 'rgba(20, 20, 20, 0.85)',
           backdropFilter: 'blur(20px) saturate(180%)',
           WebkitBackdropFilter: 'blur(20px) saturate(180%)',
         }}

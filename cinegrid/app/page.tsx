@@ -176,7 +176,14 @@ function HomeContent() {
       />
 
       {/* Movie Grid */}
-      <div>
+      <div 
+        className="rounded-xl p-4"
+        style={{
+          background: 'rgba(20, 20, 20, 0.3)',
+          backdropFilter: 'blur(10px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(10px) saturate(180%)',
+        }}
+      >
         {/* Grid header with count */}
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-semibold text-text-primary">

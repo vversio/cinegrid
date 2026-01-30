@@ -31,8 +31,9 @@ export default function AnalyticsPanel({
         <div 
           className="h-full rounded-b-2xl overflow-hidden flex"
           style={{
-            background: 'rgba(20, 20, 20, 0.7)',
+            background: 'rgba(20, 20, 20, 0.85)',
             backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
           }}
         >
           <div className="hidden lg:block w-[240px] animate-pulse" />
@@ -53,7 +54,7 @@ export default function AnalyticsPanel({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
         style={{
-          background: 'rgba(20, 20, 20, 0.7)',
+          background: 'rgba(20, 20, 20, 0.85)',
           backdropFilter: 'blur(20px) saturate(180%)',
           WebkitBackdropFilter: 'blur(20px) saturate(180%)',
         }}
@@ -64,9 +65,6 @@ export default function AnalyticsPanel({
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-          style={{
-            background: 'rgba(255, 255, 255, 0.02)',
-          }}
         >
           {/* Analytics Dashboard */}
           <div className="flex-1 overflow-y-auto scrollbar-hide p-4">

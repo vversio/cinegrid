@@ -16,7 +16,7 @@ export default function BackgroundEffect() {
       <div 
         className="absolute inset-0"
         style={{
-          background: 'rgba(0, 0, 0, 0.45)',
+          background: 'rgba(0, 0, 0, 0.25)',
         }}
       />
       
@@ -24,7 +24,7 @@ export default function BackgroundEffect() {
       <div 
         className="absolute inset-0 backdrop-blur-[2px]"
         style={{
-          background: 'rgba(15, 15, 15, 0.3)',
+          background: 'rgba(15, 15, 15, 0.15)',
         }}
       />
       

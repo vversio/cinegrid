@@ -73,17 +73,22 @@ export default function ExpandingSelect({
         />
       </button>
 
-      {/* Expanding Dropdown - Renders inline to push content */}
+      {/* Dropdown - Absolute positioned to overlap content */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, height: 0, marginTop: 0 }}
-            animate={{ opacity: 1, height: 'auto', marginTop: 4 }}
-            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className="overflow-hidden"
+            className="absolute top-full left-0 right-0 mt-1 z-[9999]"
+            style={{
+              background: 'rgba(20, 20, 20, 0.95)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            }}
           >
-            <div className="glass border-glass rounded-md">
+            <div className="border border-border-subtle rounded-md shadow-lg overflow-hidden">
               <div className="py-0.5">
                 {options.map((option) => (
                   <button
