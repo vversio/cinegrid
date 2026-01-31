@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import { Search, Loader2 } from 'lucide-react';
+import TmdbImage from '@/components/TmdbImage';
 import type { TMDBMovie, TMDBSeries, TMDBSearchResponse, TMDBSeriesSearchResponse, MediaType } from '@/lib/types';
 
 interface MovieSearchProps {
@@ -92,19 +92,15 @@ export default function MovieSearch({ onSelect, mediaType = 'movie' }: MovieSear
                 onClick={() => handleSelect(item)}
                 className="w-full flex items-center gap-3 p-3 hover:bg-bg-tertiary/50 transition-colors text-left border-b border-border-subtle/30 last:border-b-0"
               >
-                {item.poster_path ? (
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
-                    alt={title}
-                    width={46}
-                    height={69}
-                    className="rounded object-cover"
-                  />
-                ) : (
-                  <div className="w-[46px] h-[69px] bg-bg-tertiary/50 rounded flex items-center justify-center text-xs text-text-muted">
-                    No img
-                  </div>
-                )}
+                <TmdbImage
+                  path={item.poster_path}
+                  alt={title}
+                  variant="thumbnail"
+                  width={46}
+                  height={69}
+                  className="rounded object-cover w-[46px] h-[69px]"
+                  mediaType={mediaType}
+                />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-text-primary truncate">{title}</p>
                   <p className="text-sm text-text-secondary">

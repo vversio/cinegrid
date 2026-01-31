@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { Trash2 } from 'lucide-react';
+import TmdbImage from '@/components/TmdbImage';
 import { deleteWatchedMovie } from '@/lib/database';
 import type { WatchedMovie } from '@/lib/types';
 
@@ -45,19 +45,15 @@ export default function MovieGrid({ movies, onMovieDeleted }: MovieGridProps) {
           key={movie.id}
           className="group relative aspect-[2/3] rounded-lg overflow-hidden bg-zinc-200 dark:bg-zinc-800"
         >
-          {movie.poster_path ? (
-            <Image
-              src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
-              alt={movie.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-sm p-2 text-center">
-              {movie.title}
-            </div>
-          )}
+          <TmdbImage
+            path={movie.poster_path}
+            alt={movie.title}
+            variant="poster"
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            mediaType={movie.media_type === 'series' ? 'series' : 'movie'}
+          />
           
           {/* Media type badge */}
           {movie.media_type === 'series' && (

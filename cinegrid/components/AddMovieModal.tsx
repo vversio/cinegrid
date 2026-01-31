@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import TmdbImage from '@/components/TmdbImage';
 import { X, Heart } from 'lucide-react';
 import MovieSearch from './MovieSearch';
 import StarRating from './StarRating';
@@ -182,12 +182,14 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
                 >
                   {selectedItem.poster_path && (
                     <div className="relative w-12 h-18 rounded overflow-hidden flex-shrink-0">
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w92${selectedItem.poster_path}`}
+                      <TmdbImage
+                        path={selectedItem.poster_path}
                         alt={'title' in selectedItem ? selectedItem.title : selectedItem.name}
+                        variant="thumbnail"
                         width={48}
                         height={72}
                         className="object-cover"
+                        mediaType={mediaType}
                       />
                     </div>
                   )}

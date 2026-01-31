@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import TmdbImage from '@/components/TmdbImage';
 import { X, Star, Clock, Calendar } from 'lucide-react';
 import type { WatchedMovie, MediaType } from '@/lib/types';
 
@@ -137,9 +137,10 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
                 {/* Backdrop image */}
                 {details.backdrop_path && (
                   <div className="relative h-48 md:h-64 w-full">
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w780${details.backdrop_path}`}
+                    <TmdbImage
+                      path={details.backdrop_path}
                       alt=""
+                      variant="backdrop"
                       fill
                       className="object-cover rounded-t-xl"
                       priority
@@ -154,11 +155,13 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
                     {/* Poster (small) */}
                     {movie.poster_path && (
                       <div className="relative w-24 h-36 flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
-                        <Image
-                          src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
+                        <TmdbImage
+                          path={movie.poster_path}
                           alt={movie.title}
+                          variant="poster"
                           fill
                           className="object-cover"
+                          mediaType={movie.media_type || 'movie'}
                         />
                       </div>
                     )}

@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Heart, Trash2, Film, Tv } from 'lucide-react';
+import TmdbImage from '@/components/TmdbImage';
+import { Heart, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import StarRating from '@/components/StarRating';
 import type { WatchedMovie } from '@/lib/types';
@@ -114,27 +114,17 @@ export default function MovieCard({
       role={onViewDetails ? 'button' : undefined}
       aria-label={`${movie.title}${movie.media_type === 'series' ? ' (Series)' : ''}, ${movie.genre}${movie.user_rating ? `, rated ${movie.user_rating} stars` : ''}`}
     >
-      {/* Poster Image */}
-      {movie.poster_path ? (
-        <Image
-          src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
-          alt={movie.title}
-          fill
-          className="object-cover"
-          sizes={isHero ? '180px' : isCompact ? '140px' : '(max-width: 640px) 33vw, (max-width: 1024px) 20vw, 14vw'}
-          priority={priority}
-          loading={priority ? 'eager' : 'lazy'}
-        />
-      ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-bg-tertiary to-bg-primary text-text-muted p-2">
-          {movie.media_type === 'series' ? (
-            <Tv size={isCompact ? 20 : 28} className="mb-1 opacity-50" />
-          ) : (
-            <Film size={isCompact ? 20 : 28} className="mb-1 opacity-50" />
-          )}
-          <span className={cn("text-center line-clamp-2", isCompact ? "text-xs" : "text-sm")}>{movie.title}</span>
-        </div>
-      )}
+      {/* Poster Image: single request, onLoad/onError handle state; no separate GET to check */}
+      <TmdbImage
+        path={movie.poster_path}
+        alt={movie.title}
+        variant="poster"
+        fill
+        className="object-cover"
+        sizes={isHero ? '180px' : isCompact ? '140px' : '(max-width: 640px) 33vw, (max-width: 1024px) 20vw, 14vw'}
+        priority={priority}
+        mediaType={movie.media_type === 'series' ? 'series' : 'movie'}
+      />
 
       {/* Media type badge */}
       {movie.media_type === 'series' && (
