@@ -1,5 +1,9 @@
 # Root .gitignore (monorepo-level)
 
+# OpenSpec
+openspec/
+AGENTS.md
+
 # Dependencies
 node_modules/
 .pnp
