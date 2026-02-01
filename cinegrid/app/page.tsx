@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect, useMemo, Suspense } from 'react';
+import { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Plus } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Toaster, toast } from 'sonner';
 import { supabase } from '@/lib/supabaseClient';
 import type { WatchedMovie } from '@/lib/types';
@@ -14,10 +13,18 @@ import Header from '@/components/ui/Header';
 import AnalyticsPanel from '@/components/ui/AnalyticsPanel';
 import MobileAnalyticsDrawer, { AnalyticsFAB } from '@/components/ui/MobileAnalyticsDrawer';
 import FilterControls from '@/components/ui/FilterControls';
-import GenreTrendChart from '@/components/GenreTrendChart';
-import StatisticsPanel from '@/components/StatisticsPanel';
 import FavoritesCarousel from '@/components/FavoritesCarousel';
 import MovieCard from '@/components/MovieCard';
+
+// Lazy load heavy analytics components (recharts is ~50KB)
+const GenreTrendChart = dynamic(() => import('@/components/GenreTrendChart'), {
+  loading: () => <div className="h-[300px] shimmer rounded-lg" />,
+  ssr: false,
+});
+const StatisticsPanel = dynamic(() => import('@/components/StatisticsPanel'), {
+  loading: () => <div className="h-[150px] shimmer rounded-lg" />,
+  ssr: false,
+});
 import { useFilters, applyFilters, getUniqueGenres } from '@/hooks/useFilters';
 import { useMovies, useFavorites } from '@/hooks/useMovies';
 import { useAddMovie, useDeleteMovie, useToggleFavorite, useUpdateRating } from '@/hooks/useMovieMutations';
@@ -75,38 +82,38 @@ function HomeContent() {
     setIsAdminUser(user?.email === ADMIN_EMAIL);
   };
 
-  // Mutation handlers
-  const handleMovieAdded = async () => {
+  // Mutation handlers - memoized to prevent child re-renders
+  const handleMovieAdded = useCallback(() => {
     setIsModalOpen(false);
     toast.success('Added to your collection');
-  };
+  }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     try {
       await deleteMovieMutation.mutateAsync(id);
       toast.success('Removed from collection');
     } catch {
       toast.error('Failed to delete');
     }
-  };
+  }, [deleteMovieMutation]);
 
-  const handleToggleFavorite = async (id: string) => {
+  const handleToggleFavorite = useCallback(async (id: string) => {
     try {
       const result = await toggleFavoriteMutation.mutateAsync(id);
       toast.success(result ? 'Added to favorites' : 'Removed from favorites');
     } catch {
       toast.error('Failed to update favorite');
     }
-  };
+  }, [toggleFavoriteMutation]);
 
-  const handleRatingChange = async (id: string, rating: number) => {
+  const handleRatingChange = useCallback(async (id: string, rating: number) => {
     try {
       await updateRatingMutation.mutateAsync({ id, rating });
       toast.success('Rating updated');
     } catch {
       toast.error('Failed to update rating');
     }
-  };
+  }, [updateRatingMutation]);
 
   // Apply filters and sorting - also to favorites
   const filteredMovies = useMemo(() => {
@@ -121,8 +128,8 @@ function HomeContent() {
     return getUniqueGenres(movies);
   }, [movies]);
 
-  // Filter controls for navbar (horizontal layout)
-  const navbarFilterControls = (
+  // Filter controls - memoized to prevent re-creation on every render
+  const navbarFilterControls = useMemo(() => (
     <FilterControls
       filterState={filterState}
       availableGenres={availableGenres}
@@ -135,10 +142,9 @@ function HomeContent() {
       hasActiveFilters={hasActiveFilters}
       layout="horizontal"
     />
-  );
+  ), [filterState, availableGenres, updateFilters, clearFilters, hasActiveFilters]);
 
-  // Filter controls for mobile drawer (vertical layout)
-  const mobileFilterControls = (
+  const mobileFilterControls = useMemo(() => (
     <FilterControls
       filterState={filterState}
       availableGenres={availableGenres}
@@ -151,7 +157,7 @@ function HomeContent() {
       hasActiveFilters={hasActiveFilters}
       layout="vertical"
     />
-  );
+  ), [filterState, availableGenres, updateFilters, clearFilters, hasActiveFilters]);
 
   // Analytics content for sidebar
   const analyticsContent = (
@@ -176,14 +182,12 @@ function HomeContent() {
       />
 
       {/* Movie Grid */}
-      <div 
-        className="rounded-xl p-4"
-        style={{
-          background: 'rgba(20, 20, 20, 0.3)',
-          backdropFilter: 'blur(10px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(10px) saturate(180%)',
-        }}
-      >
+        <div 
+          className="rounded-xl p-4"
+          style={{
+            background: 'rgba(20, 20, 20, 0.35)',
+          }}
+        >
         {/* Grid header with count */}
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-semibold text-text-primary">
@@ -200,36 +204,22 @@ function HomeContent() {
             <p className="text-red-400 text-sm">Failed to load movies. Please refresh the page.</p>
           </div>
         ) : filteredMovies.length > 0 ? (
-          <motion.div 
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-          >
+          /* PERF: Removed staggered motion.div wrappers - they caused 100+ concurrent animations */
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
             {filteredMovies.map((movie, index) => (
-              <motion.div
+              <MovieCard
                 key={movie.id}
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ 
-                  duration: 0.4, 
-                  delay: index * 0.03,
-                  ease: [0.25, 0.46, 0.45, 0.94]
-                }}
-              >
-                <MovieCard
-                  movie={movie}
-                  isAdmin={isAdminUser}
-                  onDelete={isAdminUser ? handleDelete : undefined}
-                  onToggleFavorite={isAdminUser ? handleToggleFavorite : undefined}
-                  onRatingChange={isAdminUser ? handleRatingChange : undefined}
-                  onViewDetails={setSelectedMovie}
-                  priority={index < 8}
-                  variant="compact"
-                />
-              </motion.div>
+                movie={movie}
+                isAdmin={isAdminUser}
+                onDelete={isAdminUser ? handleDelete : undefined}
+                onToggleFavorite={isAdminUser ? handleToggleFavorite : undefined}
+                onRatingChange={isAdminUser ? handleRatingChange : undefined}
+                onViewDetails={setSelectedMovie}
+                priority={index < 8}
+                variant="compact"
+              />
             ))}
-          </motion.div>
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-12 h-12 rounded-full bg-bg-tertiary/50 flex items-center justify-center mb-3">
@@ -280,29 +270,15 @@ function HomeContent() {
       <main className="flex-1 relative z-10 overflow-hidden">
         {isLoading ? (
           <div className="h-full px-3 pb-3">
-            <motion.div 
+            <div 
               className="h-full rounded-b-2xl flex items-center justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              style={{
-                background: 'rgba(20, 20, 20, 0.7)',
-                backdropFilter: 'blur(20px) saturate(180%)',
-              }}
+              style={{ background: 'rgba(20, 20, 20, 0.7)' }}
             >
-              <motion.div 
-                className="flex flex-col items-center gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <motion.div 
-                  className="w-12 h-12 rounded-full border-2 border-text-primary/30 border-t-text-primary"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                />
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 rounded-full border-2 border-text-primary/30 border-t-text-primary animate-spin" />
                 <p className="text-text-secondary text-sm">Loading your collection...</p>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         ) : (
           <AnalyticsPanel
@@ -329,15 +305,13 @@ function HomeContent() {
       {/* Floating add button - only show for admin */}
       {isAdminUser && (
         <>
-          <motion.button
+          <button
             onClick={() => setIsModalOpen(true)}
-            className="fixed bottom-6 right-6 w-12 h-12 rounded-full glass border border-border-subtle flex items-center justify-center z-30 hover:bg-white/10 transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="fixed bottom-6 right-6 w-12 h-12 rounded-full glass border border-border-subtle flex items-center justify-center z-30 hover:bg-white/10 hover:scale-105 active:scale-95 transition-all"
             aria-label="Add movie or series"
           >
             <Plus size={20} className="text-text-primary" />
-          </motion.button>
+          </button>
 
           <AddMovieModal
             isOpen={isModalOpen}

@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useRef, useEffect, useState, memo } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import MovieCard from '@/components/MovieCard';
 import type { WatchedMovie } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface FavoritesCarouselProps {
   favorites: WatchedMovie[];
@@ -16,7 +16,14 @@ interface FavoritesCarouselProps {
   onViewDetails?: (movie: WatchedMovie) => void;
 }
 
-export default function FavoritesCarousel({
+/**
+ * PERFORMANCE OPTIMIZED:
+ * - Removed AnimatePresence (expensive layout calculations)
+ * - Removed motion.div wrappers with animate props
+ * - Uses CSS transitions instead
+ * - Wrapped in React.memo
+ */
+const FavoritesCarousel = memo(function FavoritesCarousel({
   favorites,
   isAdmin = false,
   isLoading = false,
@@ -91,16 +98,12 @@ export default function FavoritesCarousel({
           <Star size={14} className="text-text-primary" />
           <h2 className="text-sm font-semibold text-text-primary">Favorites</h2>
         </div>
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-[140px] h-[210px] mx-auto flex flex-col items-center justify-center glass rounded-lg border border-dashed border-border-subtle"
-        >
+        <div className="w-[140px] h-[210px] mx-auto flex flex-col items-center justify-center glass rounded-lg border border-dashed border-border-subtle">
           <Star size={24} className="text-text-muted mb-2" />
           <p className="text-text-secondary text-xs text-center px-3">
             Add your first favorite
           </p>
-        </motion.div>
+        </div>
       </div>
     );
   }
@@ -111,136 +114,89 @@ export default function FavoritesCarousel({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Header - lower z-index so hovered cards appear on top */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-0 relative z-0 px-2">
-        <motion.div 
-          className="flex items-center gap-2"
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
+        <div className="flex items-center gap-2">
           <Star size={14} className="text-text-primary" />
           <h2 className="text-sm font-semibold text-text-primary">Favorites</h2>
           <span className="text-xs text-text-secondary">
             {favorites.length} {favorites.length === 1 ? 'item' : 'items'}
           </span>
-        </motion.div>
+        </div>
 
         {/* Scroll buttons */}
         {favorites.length > 1 && (
-          <motion.div 
-            className="flex gap-2"
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            <motion.button
+          <div className="flex gap-2">
+            <button
               onClick={() => scroll('left')}
-              className="p-2 rounded-xl transition-all duration-300"
-              style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(8px)',
-              }}
-              whileHover={{ scale: 1.1, background: 'rgba(255, 255, 255, 0.1)' }}
-              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-xl transition-colors duration-200 bg-white/5 hover:bg-white/10"
               aria-label="Previous"
             >
               <ChevronLeft size={16} className="text-text-primary" />
-            </motion.button>
-            <motion.button
+            </button>
+            <button
               onClick={() => scroll('right')}
-              className="p-2 rounded-xl transition-all duration-300"
-              style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(8px)',
-              }}
-              whileHover={{ scale: 1.1, background: 'rgba(255, 255, 255, 0.1)' }}
-              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-xl transition-colors duration-200 bg-white/5 hover:bg-white/10"
               aria-label="Next"
             >
               <ChevronRight size={16} className="text-text-primary" />
-            </motion.button>
-          </motion.div>
+            </button>
+          </div>
         )}
       </div>
 
-      {/* Carousel - centered, with generous padding to prevent shadow clipping */}
+      {/* Carousel - CSS transitions instead of AnimatePresence */}
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-visible py-10 px-4 scrollbar-hide justify-center relative z-10"
+        className="flex gap-4 overflow-x-auto py-10 px-4 scrollbar-hide justify-center relative z-10"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          // Allow shadows to spill over (might conflict with scroll, but better for visual)
           maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
         }}
       >
-        <AnimatePresence mode="popLayout">
-          {favorites.map((movie, index) => (
-            <motion.div
-              key={movie.id}
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ 
-                opacity: 1, 
-                // Lessen highlighting: reduced scale diff
-                scale: index === activeIndex ? 1.0 : 0.9,
-                y: index === activeIndex ? 0 : 5,
-                // Lessen highlighting: reduced brightness diff
-                filter: index === activeIndex ? 'brightness(1)' : 'brightness(0.6)',
-                zIndex: index === activeIndex ? 10 : 0,
-              }}
-              whileHover={{ 
-                zIndex: 50,
-                scale: 1.05,
-                filter: 'brightness(1)',
-                transition: { duration: 0.2 }
-              }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ 
-                duration: 0.4, 
-                ease: [0.25, 0.46, 0.45, 0.94]
-              }}
-              className="flex-shrink-0 cursor-pointer relative"
-              onClick={() => setActiveIndex(index)}
-            >
-              <MovieCard
-                movie={movie}
-                variant="hero"
-                isAdmin={isAdmin}
-                onToggleFavorite={onToggleFavorite}
-                onRatingChange={onRatingChange}
-                onDelete={onDelete}
-                onViewDetails={onViewDetails}
-                priority={index < 5}
-              />
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        {favorites.map((movie, index) => (
+          <div
+            key={movie.id}
+            className={cn(
+              "flex-shrink-0 cursor-pointer relative transition-all duration-300",
+              index === activeIndex ? "scale-100 brightness-100 z-10" : "scale-90 brightness-75 z-0",
+              "hover:scale-105 hover:brightness-100 hover:z-50"
+            )}
+            onClick={() => setActiveIndex(index)}
+          >
+            <MovieCard
+              movie={movie}
+              variant="hero"
+              isAdmin={isAdmin}
+              onToggleFavorite={onToggleFavorite}
+              onRatingChange={onRatingChange}
+              onDelete={onDelete}
+              onViewDetails={onViewDetails}
+              priority={index < 5}
+            />
+          </div>
+        ))}
       </div>
 
-      {/* Carousel indicators with smooth animation */}
+      {/* Carousel indicators - CSS only */}
       {favorites.length > 1 && (
-        <motion.div 
-          className="flex justify-center gap-1.5 mt-3"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-        >
+        <div className="flex justify-center gap-1.5 mt-3">
           {favorites.map((_, index) => (
-            <motion.button
+            <button
               key={index}
               onClick={() => setActiveIndex(index)}
-              className="h-1.5 rounded-full transition-all duration-300"
-              animate={{
-                width: index === activeIndex ? 20 : 6,
-                backgroundColor: index === activeIndex ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)',
-              }}
-              whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.6)' }}
+              className={cn(
+                "h-1.5 rounded-full transition-all duration-300 hover:bg-white/60",
+                index === activeIndex ? "w-5 bg-white/90" : "w-1.5 bg-white/30"
+              )}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
-        </motion.div>
+        </div>
       )}
     </div>
   );
-}
+});
+
+export default FavoritesCarousel;

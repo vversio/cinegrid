@@ -23,11 +23,11 @@
   --border-hover: rgba(255, 255, 255, 0.18);
   --border-focus: rgba(255, 255, 255, 0.25);
   
-  /* Glass effects - neutral */
-  --glass-bg: rgba(26, 26, 26, 0.85);
-  --glass-bg-solid: #1a1a1a;
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-hover: rgba(255, 255, 255, 0.15);
+  /* Glass effects - transparent for GIF visibility */
+  --glass-bg: rgba(26, 26, 26, 0.6);
+  --glass-bg-solid: rgba(26, 26, 26, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-hover: rgba(255, 255, 255, 0.2);
   
   /* shadcn/ui overrides */
   --radius: 0.625rem;
@@ -118,12 +118,10 @@
   font-family: var(--font-sans);
 }
 
-/* Glass utility classes */
+/* Glass utility classes - OPTIMIZED: removed blur for performance, transparent for GIF visibility */
 @layer utilities {
   .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(26, 26, 26, 0.6);
     border: 1px solid var(--glass-border);
   }
   
@@ -132,14 +130,12 @@
   }
   
   .glass-solid {
-    background: var(--glass-bg-solid);
+    background: rgba(26, 26, 26, 0.8);
     border: 1px solid var(--glass-border);
   }
   
   .glass-subtle {
-    background: rgba(26, 26, 26, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(26, 26, 26, 0.5);
   }
   
   .border-glass {

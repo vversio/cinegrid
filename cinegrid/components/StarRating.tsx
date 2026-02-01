@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Star } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface StarRatingProps {
@@ -20,7 +19,13 @@ const sizeMap = {
   lg: 20,
 };
 
-export default function StarRating({
+/**
+ * PERFORMANCE OPTIMIZED:
+ * - Removed framer-motion (was creating 5 motion.button per card = 500+ for 100 movies)
+ * - Uses CSS transitions instead
+ * - Wrapped in React.memo
+ */
+const StarRating = memo(function StarRating({
   rating,
   onRatingChange,
   readOnly = false,
@@ -28,19 +33,12 @@ export default function StarRating({
   className,
 }: StarRatingProps) {
   const [hoverRating, setHoverRating] = useState<number | null>(null);
-  const [animatingStar, setAnimatingStar] = useState<number | null>(null);
-
   const displayRating = hoverRating ?? rating ?? 0;
   const starSize = sizeMap[size];
 
   const handleClick = (starIndex: number) => {
     if (readOnly || !onRatingChange) return;
-    
-    setAnimatingStar(starIndex);
     onRatingChange(starIndex);
-    
-    // Reset animation state after animation completes
-    setTimeout(() => setAnimatingStar(null), 300);
   };
 
   return (
@@ -50,34 +48,33 @@ export default function StarRating({
     >
       {[1, 2, 3, 4, 5].map((star) => {
         const isFilled = star <= displayRating;
-        const isAnimating = star === animatingStar;
 
         return (
-          <motion.button
+          <button
             key={star}
             type="button"
             disabled={readOnly}
             onClick={() => handleClick(star)}
             onMouseEnter={() => !readOnly && setHoverRating(star)}
             className={cn(
-              'transition-colors focus:outline-none',
+              'transition-transform duration-150 focus:outline-none',
               readOnly ? 'cursor-default' : 'cursor-pointer hover:scale-110'
             )}
-            animate={isAnimating ? { scale: [1, 1.2, 1] } : { scale: 1 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
           >
             <Star
               size={starSize}
               className={cn(
-                'transition-colors',
+                'transition-colors duration-150',
                 isFilled 
                   ? 'fill-white text-white' 
                   : 'fill-transparent text-text-muted'
               )}
             />
-          </motion.button>
+          </button>
         );
       })}
     </div>
   );
-}
+});
+
+export default StarRating;

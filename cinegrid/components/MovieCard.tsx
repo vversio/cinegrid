@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, memo } from 'react';
 import TmdbImage from '@/components/TmdbImage';
 import { Heart, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -16,10 +15,16 @@ interface MovieCardProps {
   onRatingChange?: (id: string, rating: number) => void;
   onViewDetails?: (movie: WatchedMovie) => void;
   variant?: 'grid' | 'hero' | 'compact';
-  priority?: boolean; // For LCP optimization - set true for above-the-fold images
+  priority?: boolean;
 }
 
-export default function MovieCard({
+/**
+ * PERFORMANCE OPTIMIZED:
+ * - Wrapped in React.memo to prevent unnecessary re-renders
+ * - Replaced framer-motion with CSS transitions (removes 100+ motion instances)
+ * - Hover state still works via CSS :hover and group-hover
+ */
+const MovieCard = memo(function MovieCard({
   movie,
   isAdmin = false,
   onDelete,
@@ -29,7 +34,6 @@ export default function MovieCard({
   variant = 'grid',
   priority = false,
 }: MovieCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
 
@@ -63,25 +67,25 @@ export default function MovieCard({
   };
 
   const handleClick = (e: React.MouseEvent) => {
-    // Don't trigger if clicking on action buttons
     const target = e.target as HTMLElement;
     if (target.closest('button')) return;
-    
     onViewDetails?.(movie);
   };
 
   const isHero = variant === 'hero';
   const isCompact = variant === 'compact';
+  
   const cardClasses = cn(
-    'group relative rounded-xl overflow-hidden',
+    'group relative rounded-xl overflow-hidden transition-transform duration-200 ease-out',
+    'hover:-translate-y-1 hover:scale-[1.02]',
     isHero 
       ? 'w-[190px] h-[285px] flex-shrink-0' 
       : isCompact
         ? 'w-[150px] h-[225px] flex-shrink-0'
-        : 'aspect-[2/3]'
+        : 'aspect-[2/3]',
+    onViewDetails && 'cursor-pointer'
   );
 
-  // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -90,31 +94,19 @@ export default function MovieCard({
   };
 
   return (
-    <motion.div
-      className={`${cardClasses} ${onViewDetails ? 'cursor-pointer' : ''}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocus={() => setIsHovered(true)}
-      onBlur={() => setIsHovered(false)}
+    <div
+      className={cardClasses}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      whileHover={isCompact ? { y: -5, scale: 1.02 } : { y: -8, scale: 1.02 }}
-      transition={{ 
-        duration: 0.35, 
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
       style={{
-        boxShadow: isHovered 
-          ? '0 15px 30px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 255, 255, 0.03)' 
-          : '0 4px 12px rgba(0, 0, 0, 0.2)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
         background: 'rgba(26, 26, 26, 0.6)',
-        backdropFilter: 'blur(8px)',
       }}
       tabIndex={onViewDetails ? 0 : undefined}
       role={onViewDetails ? 'button' : undefined}
       aria-label={`${movie.title}${movie.media_type === 'series' ? ' (Series)' : ''}, ${movie.genre}${movie.user_rating ? `, rated ${movie.user_rating} stars` : ''}`}
     >
-      {/* Poster Image: single request, onLoad/onError handle state; no separate GET to check */}
+      {/* Poster Image */}
       <TmdbImage
         path={movie.poster_path}
         alt={movie.title}
@@ -137,21 +129,17 @@ export default function MovieCard({
       )}
 
       {/* Favorite indicator (always visible if favorited) */}
-      {movie.is_favorite && !isHovered && (
-        <div className="absolute top-1.5 right-1.5">
+      {movie.is_favorite && (
+        <div className="absolute top-1.5 right-1.5 group-hover:opacity-0 transition-opacity">
           <Heart size={isCompact ? 12 : 16} className="fill-white text-white" />
         </div>
       )}
 
-      {/* Hover overlay with glassmorphism */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+      {/* Hover overlay - CSS transition instead of framer-motion */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         style={{
           background: 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 40%, rgba(0, 0, 0, 0.2) 70%, transparent 100%)',
-          backdropFilter: isHovered ? 'blur(2px)' : 'none',
         }}
       >
         {/* Content at bottom */}
@@ -215,7 +203,9 @@ export default function MovieCard({
             )}
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
-}
+});
+
+export default MovieCard;

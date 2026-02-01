@@ -165,7 +165,6 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
                   backgroundColor: '#1a1a1a',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '8px',
-                  backdropFilter: 'blur(8px)',
                 }}
                 labelStyle={{ color: '#ffffff', fontWeight: 600, marginBottom: '4px' }}
                 itemStyle={{ color: '#a0a0a0', fontSize: '12px' }}
