@@ -31,7 +31,7 @@ const Header = memo(function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-[100] px-3 pt-3">
+    <header className="hidden md:block sticky top-0 z-[100] px-3 pt-3">
       <div 
         className="rounded-t-2xl overflow-hidden"
         style={{
