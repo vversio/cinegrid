@@ -127,7 +127,7 @@ export default function AuthButton({ user, onAuthChange }: AuthButtonProps) {
       onClick={() => setShowForm(true)}
       className="px-4 py-1.5 text-sm rounded-md glass border border-border-subtle text-text-primary hover:bg-bg-tertiary/50 transition-colors"
     >
-      vversio
+      by vversio
     </button>
   );
 }

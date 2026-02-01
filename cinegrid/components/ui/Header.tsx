@@ -39,11 +39,14 @@ const Header = memo(function Header({
         }}
       >
         <div className="h-14 px-5 flex items-center justify-between gap-4">
-          {/* Logo */}
-          <div className="flex items-center flex-shrink-0">
+          {/* Logo + subtext */}
+          <div className="flex items-center gap-2 flex-shrink-0">
             <h1 className="text-xl font-bold tracking-wide text-text-primary">
               CineGrid
             </h1>
+            <span className="hidden sm:inline text-xs text-text-muted font-normal border-l border-border-subtle pl-2">
+              Movies & series I recently watched
+            </span>
           </div>
 
           {/* Desktop: Filter controls in center */}
