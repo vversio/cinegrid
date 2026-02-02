@@ -14,7 +14,7 @@ A personal movie and series tracking application with analytics dashboard. Built
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router)
-- **Database**: Supabase (PostgreSQL)
+- **Database**: Supabase
 - **Styling**: Tailwind CSS 4
 - **State Management**: React Query (TanStack Query)
 - **Animations**: Framer Motion
