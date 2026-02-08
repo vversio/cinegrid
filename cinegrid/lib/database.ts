@@ -143,13 +143,22 @@ export async function updateRating(id: string, rating: number | null): Promise<v
     throw new Error('Rating must be between 1 and 5');
   }
 
-  const { error } = await supabase
+  // Use .select() to verify the update actually persisted.
+  // Supabase silently returns success (no error) when RLS blocks an update,
+  // but the returned data array will be empty.
+  const { data, error } = await supabase
     .from('watched_movies')
     .update({ user_rating: rating })
-    .eq('id', id);
+    .eq('id', id)
+    .select();
 
   if (error) {
     console.error('Error updating rating:', error);
     throw error;
+  }
+
+  if (!data || data.length === 0) {
+    console.error('Rating update returned no rows — possible RLS policy issue or row not found', { id, rating });
+    throw new Error('Failed to update rating. The change was not saved. Check database permissions.');
   }
 }

@@ -1,10 +1,9 @@
 'use client';
 
-import { useRef, useEffect, useState, memo } from 'react';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { useEffect, useState, useRef, memo } from 'react';
+import { Star } from 'lucide-react';
 import MovieCard from '@/components/MovieCard';
 import type { WatchedMovie } from '@/lib/types';
-import { cn } from '@/lib/utils';
 
 interface FavoritesCarouselProps {
   favorites: WatchedMovie[];
@@ -17,11 +16,13 @@ interface FavoritesCarouselProps {
 }
 
 /**
- * PERFORMANCE OPTIMIZED:
- * - Removed AnimatePresence (expensive layout calculations)
- * - Removed motion.div wrappers with animate props
- * - Uses CSS transitions instead
- * - Wrapped in React.memo
+ * 3D Coverflow Carousel
+ * - Cards spread horizontally with perspective tilt (like the original coverflow)
+ * - Continuous rotation model for smooth dragging & auto-scroll
+ * - Draggable via pointer events with snap-to-item on release
+ * - Click any visible card to bring it to front
+ * - Auto-rotates every 2.5s, pauses on hover
+ * - No indicators
  */
 const FavoritesCarousel = memo(function FavoritesCarousel({
   favorites,
@@ -32,45 +33,81 @@ const FavoritesCarousel = memo(function FavoritesCarousel({
   onDelete,
   onViewDetails,
 }: FavoritesCarouselProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  // Continuous rotation angle (degrees) drives the whole carousel
+  const [rotation, setRotation] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [containerWidth, setContainerWidth] = useState(900);
 
-  // Auto-scroll carousel
+  const dragStartX = useRef(0);
+  const dragStartRotation = useRef(0);
+  const hasDragged = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const count = favorites.length;
+  const angleStep = count > 0 ? 360 / count : 0;
+
+  // Fractional "which item is at front" derived from the continuous rotation
+  const effectiveIndex = count > 0 ? -rotation / angleStep : 0;
+
+  // Measure container so cards can fill the available width
   useEffect(() => {
-    if (favorites.length <= 1 || isPaused) return;
-    
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContainerWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // ── Auto-rotate ────────────────────────────────────────────────
+  useEffect(() => {
+    if (count <= 1 || isPaused || isDragging) return;
+
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % favorites.length);
-    }, 4000);
+      setRotation((prev) => prev - angleStep);
+    }, 2500);
 
     return () => clearInterval(interval);
-  }, [favorites.length, isPaused]);
+  }, [count, isPaused, isDragging, angleStep]);
 
-  // Scroll to active item
-  useEffect(() => {
-    if (!scrollRef.current || favorites.length === 0) return;
-    
-    const container = scrollRef.current;
-    const cardWidth = 160; // card width + gap
-    const containerWidth = container.clientWidth;
-    const scrollPosition = (activeIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2);
-    
-    container.scrollTo({
-      left: Math.max(0, scrollPosition),
-      behavior: 'smooth',
-    });
-  }, [activeIndex, favorites.length]);
+  // ── Pointer / drag handlers ────────────────────────────────────
+  const handlePointerDown = (e: React.PointerEvent) => {
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    setIsDragging(true);
+    dragStartX.current = e.clientX;
+    dragStartRotation.current = rotation;
+    hasDragged.current = false;
+  };
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (direction === 'left') {
-      setActiveIndex((prev) => (prev - 1 + favorites.length) % favorites.length);
-    } else {
-      setActiveIndex((prev) => (prev + 1) % favorites.length);
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return;
+    const deltaX = e.clientX - dragStartX.current;
+    if (Math.abs(deltaX) > 5) hasDragged.current = true;
+    setRotation(dragStartRotation.current + deltaX * 0.3);
+  };
+
+  const handlePointerUp = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    // Snap to nearest card position
+    if (angleStep > 0) {
+      setRotation((prev) => Math.round(prev / angleStep) * angleStep);
     }
   };
 
-  // Loading skeleton
+  // Click a side card to bring it to front (shortest-path rotation)
+  const handleCardClick = (index: number) => {
+    if (hasDragged.current) return;
+    const targetRot = -index * angleStep;
+    const diff = targetRot - rotation;
+    // Normalise to [-180, 180] so the drum takes the short way round
+    const normalised = ((diff % 360) + 540) % 360 - 180;
+    setRotation(rotation + normalised);
+  };
+
+  // ── Loading skeleton ───────────────────────────────────────────
   if (isLoading) {
     return (
       <div className="mb-6">
@@ -90,7 +127,7 @@ const FavoritesCarousel = memo(function FavoritesCarousel({
     );
   }
 
-  // Empty state
+  // ── Empty state ────────────────────────────────────────────────
   if (favorites.length === 0) {
     return (
       <div className="mb-6">
@@ -108,93 +145,107 @@ const FavoritesCarousel = memo(function FavoritesCarousel({
     );
   }
 
+  // ── Main render ────────────────────────────────────────────────
   return (
-    <div 
+    <div
       className="mb-6 relative"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-0 relative z-0 px-2">
-        <div className="flex items-center gap-2">
-          <Star size={14} className="text-text-primary" />
-          <h2 className="text-sm font-semibold text-text-primary">Favorites</h2>
-          <span className="text-xs text-text-secondary">
-            {favorites.length} {favorites.length === 1 ? 'item' : 'items'}
-          </span>
-        </div>
-
-        {/* Scroll buttons */}
-        {favorites.length > 1 && (
-          <div className="flex gap-2">
-            <button
-              onClick={() => scroll('left')}
-              className="p-2 rounded-xl transition-colors duration-200 bg-white/5 hover:bg-white/10"
-              aria-label="Previous"
-            >
-              <ChevronLeft size={16} className="text-text-primary" />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              className="p-2 rounded-xl transition-colors duration-200 bg-white/5 hover:bg-white/10"
-              aria-label="Next"
-            >
-              <ChevronRight size={16} className="text-text-primary" />
-            </button>
-          </div>
-        )}
+      <div className="flex items-center gap-2 mb-0 px-2">
+        <Star size={14} className="text-text-primary" />
+        <h2 className="text-sm font-semibold text-text-primary">Favorites</h2>
+        <span className="text-xs text-text-secondary">
+          {count} {count === 1 ? 'item' : 'items'}
+        </span>
       </div>
 
-      {/* Carousel - CSS transitions instead of AnimatePresence */}
+      {/* 3D Coverflow — spread layout with perspective tilt */}
       <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto py-10 px-4 scrollbar-hide justify-center relative z-10"
+        ref={containerRef}
+        className="relative overflow-hidden select-none"
         style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
+          perspective: '1000px',
+          perspectiveOrigin: '50% 50%',
+          height: '340px',
+          cursor: isDragging ? 'grabbing' : 'grab',
+          touchAction: 'none',
         }}
+        // Eat click events that follow a drag so MovieCard doesn't open details
+        onClickCapture={(e) => {
+          if (hasDragged.current) {
+            e.stopPropagation();
+            e.preventDefault();
+            hasDragged.current = false;
+          }
+        }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
       >
-        {favorites.map((movie, index) => (
-          <div
-            key={movie.id}
-            className={cn(
-              "flex-shrink-0 cursor-pointer relative transition-all duration-300",
-              index === activeIndex ? "scale-100 brightness-100 z-10" : "scale-90 brightness-75 z-0",
-              "hover:scale-105 hover:brightness-100 hover:z-50"
-            )}
-            onClick={() => setActiveIndex(index)}
-          >
-            <MovieCard
-              movie={movie}
-              variant="hero"
-              isAdmin={isAdmin}
-              onToggleFavorite={onToggleFavorite}
-              onRatingChange={onRatingChange}
-              onDelete={onDelete}
-              onViewDetails={onViewDetails}
-              priority={index < 5}
-            />
-          </div>
-        ))}
-      </div>
+        {(() => {
+          // ── Row-aware layout ──
+          // Figure out how many full card slots fit, then space them evenly.
+          const cardWidth = 190;                           // hero variant width
+          const gap = 24;                                  // min gap between cards
+          const slotWidth = cardWidth + gap;
+          const totalSlots = Math.max(1, Math.floor(containerWidth / slotWidth));
+          // Always odd so there is a centred highlight card
+          const visibleCount = totalSlots % 2 === 0 ? totalSlots - 1 : totalSlots;
+          const maxVisible = Math.floor(visibleCount / 2);
+          // Centre-to-centre distance between adjacent cards
+          const spacing = containerWidth / (visibleCount || 1);
 
-      {/* Carousel indicators - CSS only */}
-      {favorites.length > 1 && (
-        <div className="flex justify-center gap-1.5 mt-3">
-          {favorites.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-300 hover:bg-white/60",
-                index === activeIndex ? "w-5 bg-white/90" : "w-1.5 bg-white/30"
-              )}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
+          return favorites.map((movie, index) => {
+            // Offset from the "front" position (fractional while dragging)
+            let offset = index - effectiveIndex;
+            // Wrap to shortest-path range [-count/2, count/2)
+            if (count > 1) {
+              offset = ((offset % count) + count + count / 2) % count - count / 2;
+            }
+
+            const absOffset = Math.abs(offset);
+            const visible = absOffset <= maxVisible + 0.5;
+
+            // ── Geometry ──
+            const tiltY = offset * 35;                                     // outward-right tilt
+            const translateX = offset * spacing;                           // even row spread
+            const translateZ = -absOffset * 30;                            // subtle depth
+            const scale = Math.max(0.88, 1 - absOffset * 0.04);           // nearly uniform size
+            const opacity = visible ? Math.max(0.35, 1 - absOffset * 0.2) : 0;
+            const zIndex = 100 - Math.round(absOffset);
+
+            return (
+              <div
+                key={movie.id}
+                className="absolute left-1/2 top-1/2"
+                style={{
+                  transform: `translateX(calc(-50% + ${translateX}px)) translateY(-50%) rotateY(${tiltY}deg) translateZ(${translateZ}px) scale(${scale})`,
+                  opacity,
+                  zIndex,
+                  transition: isDragging
+                    ? 'none'
+                    : 'transform 0.4s ease-out, opacity 0.4s ease-out',
+                  pointerEvents: visible ? 'auto' : 'none',
+                }}
+                onClick={() => handleCardClick(index)}
+              >
+                <MovieCard
+                  movie={movie}
+                  variant="hero"
+                  isAdmin={isAdmin}
+                  onToggleFavorite={onToggleFavorite}
+                  onRatingChange={onRatingChange}
+                  onDelete={onDelete}
+                  onViewDetails={onViewDetails}
+                  priority={index < 5}
+                />
+              </div>
+            );
+          });
+        })()}
+      </div>
     </div>
   );
 });

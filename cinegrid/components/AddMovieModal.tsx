@@ -211,6 +211,27 @@ export default function AddMovieModal({ isOpen, onClose, onMovieAdded, mutation 
                   type="date"
                   value={watchedDate}
                   onChange={(e) => setWatchedDate(e.target.value)}
+                  onPaste={(e) => {
+                    const text = e.clipboardData.getData('text').trim();
+                    if (!text) return;
+
+                    // If already YYYY-MM-DD, use directly
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+                      e.preventDefault();
+                      setWatchedDate(text);
+                      return;
+                    }
+
+                    // Try to parse with the Date constructor (handles most formats)
+                    const parsed = new Date(text);
+                    if (!isNaN(parsed.getTime())) {
+                      e.preventDefault();
+                      const y = parsed.getFullYear();
+                      const m = String(parsed.getMonth() + 1).padStart(2, '0');
+                      const d = String(parsed.getDate()).padStart(2, '0');
+                      setWatchedDate(`${y}-${m}-${d}`);
+                    }
+                  }}
                   required
                   className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg-tertiary/30 text-text-primary focus:outline-none focus:ring-2 focus:ring-border-focus"
                 />
