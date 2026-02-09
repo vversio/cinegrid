@@ -65,6 +65,19 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
 
   const topGenres = useMemo(() => getTopGenres(movies, 7), [movies]);
 
+  // Compute a single total-watches-per-month series from the chart data
+  const totalChartData = useMemo(() => {
+    return chartData.map((point) => {
+      let total = 0;
+      for (const key of Object.keys(point)) {
+        if (key !== 'month' && key !== 'monthLabel') {
+          total += (point[key] as number) || 0;
+        }
+      }
+      return { ...point, total };
+    });
+  }, [chartData]);
+
   // Loading state
   if (isLoading) {
     return (
@@ -134,18 +147,16 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
         </div>
       </div>
 
-      {/* Chart */}
+      {/* Chart — single line for total watches per month */}
       <div className="h-[180px]" style={{ minHeight: '180px' }}>
-        {chartData.length > 0 ? (
+        {totalChartData.length > 0 ? (
           <ResponsiveContainer width="100%" height="100%" minHeight={180}>
-            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={totalChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
-                {topGenres.map((genre, index) => (
-                  <linearGradient key={genre} id={`gradient-${index}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={getChartColor(index)} stopOpacity={0.4} />
-                    <stop offset="95%" stopColor={getChartColor(index)} stopOpacity={0.1} />
-                  </linearGradient>
-                ))}
+                <linearGradient id="gradient-total" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#ffffff" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#ffffff" stopOpacity={0.05} />
+                </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1)" />
               <XAxis
@@ -168,18 +179,16 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
                 }}
                 labelStyle={{ color: '#ffffff', fontWeight: 600, marginBottom: '4px' }}
                 itemStyle={{ color: '#a0a0a0', fontSize: '12px' }}
+                formatter={(value: number) => [value, 'Watched']}
               />
-              {topGenres.map((genre, index) => (
-                <Area
-                  key={genre}
-                  type="monotone"
-                  dataKey={genre}
-                  stackId="1"
-                  stroke={getChartColor(index)}
-                  fill={`url(#gradient-${index})`}
-                  strokeWidth={2}
-                />
-              ))}
+              <Area
+                type="monotone"
+                dataKey="total"
+                name="Watched"
+                stroke="#ffffff"
+                fill="url(#gradient-total)"
+                strokeWidth={2}
+              />
             </AreaChart>
           </ResponsiveContainer>
         ) : (

@@ -327,6 +327,8 @@ function HomeContent() {
         movie={selectedMovie}
         isOpen={!!selectedMovie}
         onClose={() => setSelectedMovie(null)}
+        isAdmin={isAdminUser}
+        onRatingChange={isAdminUser ? handleRatingChange : undefined}
       />
     </div>
   );

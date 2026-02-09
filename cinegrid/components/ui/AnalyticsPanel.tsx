@@ -31,7 +31,7 @@ const AnalyticsPanel = memo(function AnalyticsPanel({
           <div className="flex-1 overflow-y-auto scrollbar-hide p-4">
             <div className="mb-4">
               <h2 className="text-sm font-semibold text-text-primary mb-1">Analytics</h2>
-              <p className="text-xs text-text-muted">Your watching stats</p>
+              <p className="text-xs text-text-muted">My watching stats</p>
             </div>
             {children}
           </div>

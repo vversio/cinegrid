@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TmdbImage from '@/components/TmdbImage';
 import { X, Star, Clock, Calendar } from 'lucide-react';
+import StarRating from '@/components/StarRating';
 import type { WatchedMovie, MediaType } from '@/lib/types';
 
 interface TMDBDetails {
@@ -23,9 +24,11 @@ interface MovieDetailsModalProps {
   movie: WatchedMovie | null;
   isOpen: boolean;
   onClose: () => void;
+  isAdmin?: boolean;
+  onRatingChange?: (id: string, rating: number) => void;
 }
 
-export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetailsModalProps) {
+export default function MovieDetailsModal({ movie, isOpen, onClose, isAdmin = false, onRatingChange }: MovieDetailsModalProps) {
   const [details, setDetails] = useState<TMDBDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -227,20 +230,35 @@ export default function MovieDetailsModal({ movie, isOpen, onClose }: MovieDetai
                   {/* Your watch info */}
                   <div className="mt-6 pt-4 border-t border-border-subtle">
                     <h3 className="text-xs font-medium text-text-muted uppercase mb-2">Your Watch</h3>
-                    <div className="flex items-center gap-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-4 text-sm">
                       <span className="text-text-secondary">
                         Watched: {new Date(movie.watched_date).toLocaleDateString()}
                       </span>
-                      {movie.user_rating && (
-                        <span className="flex items-center gap-1 text-text-primary">
-                          <Star size={14} className="fill-current" />
-                          {movie.user_rating}/5
-                        </span>
-                      )}
                       {movie.custom_category && (
                         <span className="px-2 py-0.5 text-xs rounded-full bg-bg-tertiary/50 text-text-primary">
                           {movie.custom_category}
                         </span>
+                      )}
+                    </div>
+
+                    {/* Editable rating */}
+                    <div className="mt-3 flex items-center gap-3">
+                      <span className="text-xs text-text-muted">Your Rating:</span>
+                      <StarRating
+                        rating={movie.user_rating}
+                        onRatingChange={
+                          isAdmin && onRatingChange
+                            ? (rating) => onRatingChange(movie.id, rating)
+                            : undefined
+                        }
+                        readOnly={!isAdmin}
+                        size="md"
+                      />
+                      {movie.user_rating && (
+                        <span className="text-xs text-text-secondary">{movie.user_rating}/5</span>
+                      )}
+                      {!movie.user_rating && !isAdmin && (
+                        <span className="text-xs text-text-muted">Not rated</span>
                       )}
                     </div>
                   </div>

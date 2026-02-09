@@ -41,7 +41,14 @@ export function aggregateByGenreAndMonth(
     genreMap.set(movie.genre, currentCount + 1);
   });
 
-  // Convert to array sorted by month
+  // Collect every genre that appears in any month
+  const allGenres = new Set<string>();
+  monthGenreMap.forEach((genreMap) => {
+    genreMap.forEach((_, genre) => allGenres.add(genre));
+  });
+
+  // Convert to array sorted by month, filling missing genres with 0
+  // so Recharts lines are never broken by undefined gaps.
   const sortedMonths = Array.from(monthGenreMap.keys()).sort();
   
   return sortedMonths.map(month => {
@@ -57,8 +64,9 @@ export function aggregateByGenreAndMonth(
       monthLabel,
     };
 
-    genreMap.forEach((count, genre) => {
-      dataPoint[genre] = count;
+    // Set every genre — 0 if no movies that month
+    allGenres.forEach((genre) => {
+      dataPoint[genre] = genreMap.get(genre) || 0;
     });
 
     return dataPoint;
