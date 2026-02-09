@@ -161,12 +161,12 @@ const FavoritesCarousel = memo(function FavoritesCarousel({
         </span>
       </div>
 
-      {/* 3D Coverflow — spread layout with perspective tilt */}
+      {/* Row carousel — flat layout with slight tilt to the right */}
       <div
         ref={containerRef}
         className="relative overflow-hidden select-none"
         style={{
-          perspective: '1000px',
+          perspective: '1200px',   // minimal, only so rotateY reads as tilt (no curvature)
           perspectiveOrigin: '50% 50%',
           height: '340px',
           cursor: isDragging ? 'grabbing' : 'grab',
@@ -208,11 +208,9 @@ const FavoritesCarousel = memo(function FavoritesCarousel({
             const absOffset = Math.abs(offset);
             const visible = absOffset <= maxVisible + 0.5;
 
-            // ── Geometry ──
-            const tiltY = offset * 35;                                     // outward-right tilt
-            const translateX = offset * spacing;                           // even row spread
-            const translateZ = -absOffset * 30;                            // subtle depth
-            const scale = Math.max(0.88, 1 - absOffset * 0.04);           // nearly uniform size
+            // ── Geometry (flat row, slight tilt only) ──
+            const tiltY = offset * 18;                                      // slight outward-right tilt
+            const translateX = offset * spacing;                            // even row spread
             const opacity = visible ? Math.max(0.35, 1 - absOffset * 0.2) : 0;
             const zIndex = 100 - Math.round(absOffset);
 
@@ -221,7 +219,7 @@ const FavoritesCarousel = memo(function FavoritesCarousel({
                 key={movie.id}
                 className="absolute left-1/2 top-1/2"
                 style={{
-                  transform: `translateX(calc(-50% + ${translateX}px)) translateY(-50%) rotateY(${tiltY}deg) translateZ(${translateZ}px) scale(${scale})`,
+                  transform: `translateX(calc(-50% + ${translateX}px)) translateY(-50%) rotateY(${tiltY}deg)`,
                   opacity,
                   zIndex,
                   transition: isDragging
