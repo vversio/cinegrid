@@ -179,7 +179,7 @@ export default function GenreTrendChart({ movies, isLoading }: GenreTrendChartPr
                 }}
                 labelStyle={{ color: '#ffffff', fontWeight: 600, marginBottom: '4px' }}
                 itemStyle={{ color: '#a0a0a0', fontSize: '12px' }}
-                formatter={(value: number) => [value, 'Watched']}
+                formatter={(value: number | undefined) => [value ?? 0, 'Watched']}
               />
               <Area
                 type="monotone"
